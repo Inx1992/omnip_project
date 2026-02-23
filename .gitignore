@@ -1,0 +1,29 @@
+cat <<EOF > .gitignore
+
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+build/
+dist/
+
+
+.env
+.env.secret
+
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/target/
+dbt_project/dbt_modules/
+
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+.vscode/
+.idea/
+.DS_Store
+EOF

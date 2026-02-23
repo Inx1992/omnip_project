@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  scraper:
+    build: .
+    volumes:
+      - .:/app
+    env_file: .env
+    command: python src/main.py
+
+  dbt:
+    build: .
+    volumes:
+      - .:/app
+    env_file: .env
+    depends_on:
+      scraper:
+        condition: service_completed_successfully
+    command: dbt run --project-dir dbt_project --profiles-dir dbt_project

@@ -1,0 +1,12 @@
+omnip:
+  outputs:
+    dev:
+      type: redshift
+      host: "{{ env_var('REDSHIFT_HOST', 'localhost') }}"
+      user: "{{ env_var('REDSHIFT_USER', 'temporary_user') }}"
+      password: "{{ env_var('REDSHIFT_PASSWORD', 'temporary_password') }}"
+      port: 5439
+      dbname: dev
+      schema: public
+      threads: 4
+  target: dev

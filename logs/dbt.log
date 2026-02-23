@@ -1,0 +1,171 @@
+[0m10:37:29.595658 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108eb0c20>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a00fb10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a00fd90>]}
+
+
+============================== 10:37:29.656807 | ea5dadd4-9779-46e6-b51b-02e0d87e32b6 ==============================
+[0m10:37:29.656807 [info ] [MainThread]: Running with dbt=1.11.6
+[0m10:37:29.657981 [debug] [MainThread]: running dbt with arguments {'partial_parse': 'True', 'target_path': 'None', 'quiet': 'False', 'indirect_selection': 'eager', 'profiles_dir': '/Users/test/.dbt', 'log_format': 'default', 'write_json': 'True', 'version_check': 'True', 'printer_width': '80', 'warn_error': 'None', 'log_path': 'logs', 'cache_selected_only': 'False', 'use_colors': 'True', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'static_parser': 'True', 'invocation_command': 'dbt init .', 'empty': 'None', 'no_print': 'None', 'debug': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'fail_fast': 'False', 'use_experimental_parser': 'False'}
+[0m10:38:05.039239 [error] [MainThread]: Encountered an error:
+
+[0m10:38:05.046392 [error] [MainThread]: Traceback (most recent call last):
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/dbt/cli/requires.py", line 182, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/dbt/cli/requires.py", line 128, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/dbt/cli/main.py", line 483, in init
+    results = task.run()
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/dbt/task/init.py", line 324, in run
+    project_name = self.get_valid_project_name()
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/dbt/task/init.py", line 278, in get_valid_project_name
+    name = click.prompt("Enter a name for your project (letters, digits, underscore)")
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/click/termui.py", line 171, in prompt
+    value = prompt_func(prompt)
+  File "/Users/test/omnip/.venv/lib/python3.13/site-packages/click/termui.py", line 154, in prompt_func
+    raise Abort() from None
+click.exceptions.Abort
+
+[0m10:38:05.084710 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": false, "command_wall_clock_time": 35.616524, "process_in_blocks": "0", "process_kernel_time": 1.07444, "process_mem_max_rss": "138989568", "process_out_blocks": "0", "process_user_time": 4.54661}
+[0m10:38:05.085641 [debug] [MainThread]: Command `dbt init` failed at 10:38:05.085459 after 35.62 seconds
+[0m10:38:05.086218 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a08de00>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a1944d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109f42690>]}
+[0m10:38:05.086803 [debug] [MainThread]: Flushing usage events
+[0m10:38:05.840562 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m10:41:32.973559 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1042dcad0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10541b750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10541b890>]}
+
+
+============================== 10:41:32.982338 | 6ab61f2a-ae33-4214-b96c-98da0e9996fe ==============================
+[0m10:41:32.982338 [info ] [MainThread]: Running with dbt=1.11.6
+[0m10:41:32.983273 [debug] [MainThread]: running dbt with arguments {'debug': 'False', 'fail_fast': 'False', 'version_check': 'True', 'partial_parse': 'True', 'profiles_dir': '/Users/test/.dbt', 'no_print': 'None', 'printer_width': '80', 'static_parser': 'True', 'use_experimental_parser': 'False', 'log_cache_events': 'False', 'introspect': 'True', 'send_anonymous_usage_stats': 'True', 'use_colors': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_path': 'logs', 'invocation_command': 'dbt init dbt_project --skip-profile-setup', 'empty': 'None', 'cache_selected_only': 'False', 'quiet': 'False', 'write_json': 'True', 'warn_error': 'None', 'indirect_selection': 'eager', 'log_format': 'default', 'target_path': 'None'}
+[0m10:41:33.006242 [info ] [MainThread]: A project called dbt_project already exists here.
+[0m10:41:33.009301 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 0.15931395, "process_in_blocks": "0", "process_kernel_time": 0.445031, "process_mem_max_rss": "101912576", "process_out_blocks": "0", "process_user_time": 2.159295}
+[0m10:41:33.010196 [debug] [MainThread]: Command `dbt init` succeeded at 10:41:33.010004 after 0.16 seconds
+[0m10:41:33.010890 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10534b490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1054d1fd0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1052a19d0>]}
+[0m10:41:33.011588 [debug] [MainThread]: Flushing usage events
+[0m10:41:35.565108 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m10:59:20.831231 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10e398ad0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10f4df750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10f4df890>]}
+
+
+============================== 10:59:20.839478 | fdcbcaf9-eeb7-4026-88a7-ef8720225e19 ==============================
+[0m10:59:20.839478 [info ] [MainThread]: Running with dbt=1.11.6
+[0m10:59:20.840689 [debug] [MainThread]: running dbt with arguments {'log_format': 'default', 'cache_selected_only': 'False', 'printer_width': '80', 'static_parser': 'True', 'use_experimental_parser': 'False', 'introspect': 'True', 'log_cache_events': 'False', 'indirect_selection': 'eager', 'debug': 'False', 'warn_error': 'None', 'target_path': 'None', 'invocation_command': 'dbt init dbt_project --skip-profile-setup', 'partial_parse': 'True', 'log_path': 'logs', 'no_print': 'None', 'quiet': 'False', 'profiles_dir': '/Users/test/.dbt', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'use_colors': 'True', 'fail_fast': 'False', 'empty': 'None', 'version_check': 'True', 'send_anonymous_usage_stats': 'True', 'write_json': 'True'}
+[0m10:59:20.867841 [info ] [MainThread]: A project called dbt_project already exists here.
+[0m10:59:20.871081 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 0.16341312, "process_in_blocks": "0", "process_kernel_time": 0.492516, "process_mem_max_rss": "102199296", "process_out_blocks": "0", "process_user_time": 2.19911}
+[0m10:59:20.871954 [debug] [MainThread]: Command `dbt init` succeeded at 10:59:20.871766 after 0.16 seconds
+[0m10:59:20.872535 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10f40f490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10f59dfd0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10f3659d0>]}
+[0m10:59:20.873135 [debug] [MainThread]: Flushing usage events
+[0m10:59:21.532175 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m11:01:47.437301 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10aeb8ad0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bffb750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bffb890>]}
+
+
+============================== 11:01:47.446056 | a63268aa-8ff8-42b0-bf92-c4e8aeae4b16 ==============================
+[0m11:01:47.446056 [info ] [MainThread]: Running with dbt=1.11.6
+[0m11:01:47.447380 [debug] [MainThread]: running dbt with arguments {'log_path': 'logs', 'log_format': 'default', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'warn_error': 'None', 'use_colors': 'True', 'printer_width': '80', 'quiet': 'False', 'introspect': 'True', 'send_anonymous_usage_stats': 'True', 'use_experimental_parser': 'False', 'fail_fast': 'False', 'empty': 'None', 'partial_parse': 'True', 'write_json': 'True', 'indirect_selection': 'eager', 'version_check': 'True', 'profiles_dir': '/Users/test/.dbt', 'cache_selected_only': 'False', 'no_print': 'None', 'target_path': 'None', 'static_parser': 'True', 'invocation_command': 'dbt init dbt_project --skip-profile-setup', 'debug': 'False'}
+[0m11:01:47.470933 [info ] [MainThread]: A project called dbt_project already exists here.
+[0m11:01:47.473015 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 0.15324268, "process_in_blocks": "0", "process_kernel_time": 0.303624, "process_mem_max_rss": "101953536", "process_out_blocks": "0", "process_user_time": 2.112819}
+[0m11:01:47.474045 [debug] [MainThread]: Command `dbt init` succeeded at 11:01:47.473819 after 0.15 seconds
+[0m11:01:47.474718 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bf2f490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c0b5fd0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10be859d0>]}
+[0m11:01:47.475525 [debug] [MainThread]: Flushing usage events
+[0m11:01:48.124322 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m11:02:46.893056 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1126f8ad0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x113837750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x113837890>]}
+
+
+============================== 11:02:46.901828 | 6b8f5ac6-b1e1-44a7-a09c-5223f7ef4b33 ==============================
+[0m11:02:46.901828 [info ] [MainThread]: Running with dbt=1.11.6
+[0m11:02:46.902761 [debug] [MainThread]: running dbt with arguments {'partial_parse': 'True', 'version_check': 'True', 'no_print': 'None', 'cache_selected_only': 'False', 'profiles_dir': '/Users/test/.dbt', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'write_json': 'True', 'use_experimental_parser': 'False', 'indirect_selection': 'eager', 'send_anonymous_usage_stats': 'True', 'log_path': 'logs', 'fail_fast': 'False', 'static_parser': 'True', 'debug': 'False', 'log_format': 'default', 'log_cache_events': 'False', 'quiet': 'False', 'invocation_command': 'dbt init dbt_project --skip-profile-setup', 'empty': 'None', 'warn_error': 'None', 'use_colors': 'True', 'introspect': 'True', 'printer_width': '80'}
+[0m11:02:46.926962 [debug] [MainThread]: Starter project path: /Users/test/omnip/.venv/lib/python3.13/site-packages/dbt/include/starter_project
+[0m11:02:46.939460 [info ] [MainThread]: 
+Your new dbt project "dbt_project" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m11:02:46.942488 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 0.1698276, "process_in_blocks": "0", "process_kernel_time": 0.404128, "process_mem_max_rss": "102076416", "process_out_blocks": "0", "process_user_time": 2.173343}
+[0m11:02:46.943336 [debug] [MainThread]: Command `dbt init` succeeded at 11:02:46.943149 after 0.17 seconds
+[0m11:02:46.944034 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x11376b490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1138f9fd0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1136c19d0>]}
+[0m11:02:46.944714 [debug] [MainThread]: Flushing usage events
+[0m11:02:47.518201 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m12:58:06.215759 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1093d8d70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a52f750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a52f890>]}
+
+
+============================== 12:58:06.222766 | c6cf2a21-9aa2-4ab3-b978-d3b3c509eb82 ==============================
+[0m12:58:06.222766 [info ] [MainThread]: Running with dbt=1.11.6
+[0m12:58:06.223782 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'profiles_dir': '/Users/test/.dbt', 'empty': 'None', 'send_anonymous_usage_stats': 'True', 'indirect_selection': 'eager', 'quiet': 'False', 'cache_selected_only': 'False', 'use_colors': 'True', 'version_check': 'True', 'log_cache_events': 'False', 'introspect': 'True', 'use_experimental_parser': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'invocation_command': 'dbt debug', 'fail_fast': 'False', 'warn_error': 'None', 'log_path': 'logs', 'no_print': 'None', 'partial_parse': 'True', 'debug': 'False', 'printer_width': '80', 'target_path': 'None', 'log_format': 'default', 'write_json': 'True'}
+[0m12:58:06.242259 [info ] [MainThread]: dbt version: 1.11.6
+[0m12:58:06.242836 [info ] [MainThread]: python version: 3.13.1
+[0m12:58:06.243302 [info ] [MainThread]: python path: /Users/test/omnip/.venv/bin/python
+[0m12:58:06.243817 [info ] [MainThread]: os info: macOS-13.7.6-x86_64-i386-64bit-Mach-O
+[0m12:58:06.322879 [info ] [MainThread]: Using profiles dir at /Users/test/.dbt
+[0m12:58:06.323469 [info ] [MainThread]: Using profiles.yml file at /Users/test/.dbt/profiles.yml
+[0m12:58:06.323938 [info ] [MainThread]: Using dbt_project.yml file at /Users/test/omnip/dbt_project.yml
+[0m12:58:06.326597 [info ] [MainThread]: adapter type: postgres
+[0m12:58:06.327187 [info ] [MainThread]: adapter version: 1.10.0
+[0m12:58:06.327692 [info ] [MainThread]: Configuration:
+[0m12:58:06.328150 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m12:58:06.328602 [info ] [MainThread]:   dbt_project.yml file [[31mERROR not found[0m]
+[0m12:58:06.329071 [info ] [MainThread]: Required dependencies:
+[0m12:58:06.329631 [debug] [MainThread]: Executing "git --help"
+[0m12:58:06.348794 [debug] [MainThread]: STDOUT: "b'\xd0\xb2\xd0\xb8\xd0\xba\xd0\xbe\xd1\x80\xd0\xb8\xd1\x81\xd1\x82\xd0\xb0\xd0\xbd\xd0\xbd\xd1\x8f: git [-v | --version] [-h | --help] [-C <\xd1\x88\xd0\xbb\xd1\x8f\xd1\x85>] [-c <\xd0\xbd\xd0\xb0\xd0\xb7\xd0\xb2\xd0\xb0>=<\xd0\xb7\xd0\xbd\xd0\xb0\xd1\x87\xd0\xb5\xd0\xbd\xd0\xbd\xd1\x8f>]\n           [--exec-path[=<\xd1\x88\xd0\xbb\xd1\x8f\xd1\x85>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<\xd1\x88\xd0\xbb\xd1\x8f\xd1\x85>]\n           [--work-tree=<\xd1\x88\xd0\xbb\xd1\x8f\xd1\x85>] [--namespace=<\xd0\xbd\xd0\xb0\xd0\xb7\xd0\xb2\xd0\xb0>] [--config-env=<\xd1\x88\xd0\xbb\xd1\x8f\xd1\x85>=<\xd0\xb7\xd0\xbc\xd1\x96\xd0\xbd\xd0\xbd\xd0\xb0-\xd0\xbe\xd1\x82\xd0\xbe\xd1\x87\xd0\xb5\xd0\xbd\xd0\xbd\xd1\x8f>]\n           <\xd0\xba\xd0\xbe\xd0\xbc\xd0\xb0\xd0\xbd\xd0\xb4\xd0\xb0> [<\xd0\xb0\xd1\x80\xd0\xb3\xd1\x83\xd0\xbc\xd0\xb5\xd0\xbd\xd1\x82\xd0\xb8>]\n\n\xd0\xa6\xd0\xb5 \xd0\xb7\xd0\xb0\xd0\xb3\xd0\xb0\xd0\xbb\xd1\x8c\xd0\xbd\xd1\x96 \xd0\xba\xd0\xbe\xd0\xbc\xd0\xb0\xd0\xbd\xd0\xb4\xd0\xb8 Git, \xd1\x8f\xd0\xba\xd1\x96 \xd0\xb2\xd0\xb8\xd0\xba\xd0\xbe\xd1\x80\xd0\xb8\xd1\x81\xd1\x82\xd0\xbe\xd0\xb2\xd1\x83\xd1\x8e\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f \xd0\xb2 \xd1\x80\xd1\x96\xd0\xb7\xd0\xbd\xd0\xb8\xd1\x85 \xd1\x81\xd0\xb8\xd1\x82\xd1\x83\xd0\xb0\xd1\x86\xd1\x96\xd1\x8f\xd1\x85:\n\n\xd0\xb7\xd0\xb0\xd0\xbf\xd1\x83\xd1\x81\xd1\x82\xd0\xb8\xd1\x82\xd0\xb8 \xd1\x80\xd0\xbe\xd0\xb1\xd0\xbe\xd1\x87\xd1\x83 \xd0\xbe\xd0\xb1\xd0\xbb\xd0\xb0\xd1\x81\xd1\x82\xd1\x8c (\xd0\xb4\xd0\xb8\xd0\xb2\xd1\x96\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f \xd1\x82\xd0\xb0\xd0\xba\xd0\xbe\xd0\xb6: git help tutorial)\n   clone     \xd0\x9a\xd0\xbb\xd0\xbe\xd0\xbd\xd1\x83\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x81\xd1\x85\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x89\xd0\xb5 \xd0\xb2 \xd0\xbd\xd0\xbe\xd0\xb2\xd1\x83 \xd0\xb4\xd0\xb8\xd1\x80\xd0\xb5\xd0\xba\xd1\x82\xd0\xbe\xd1\x80\xd1\x96\xd1\x8e\n   init      \xd0\xa1\xd1\x82\xd0\xb2\xd0\xbe\xd1\x80\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xbf\xd0\xbe\xd1\x80\xd0\xbe\xd0\xb6\xd0\xbd\xd1\x94 Git \xd1\x81\xd1\x85\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x89\xd0\xb5 \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xbf\xd0\xb5\xd1\x80\xd0\xb5\xd1\x96\xd0\xbd\xd1\x96\xd1\x86\xd1\x96\xd0\xb0\xd0\xbb\xd1\x96\xd0\xb7\xd1\x83\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x96\xd1\x81\xd0\xbd\xd1\x83\xd1\x8e\xd1\x87\xd0\xb5\n\n\xd0\xbf\xd1\x80\xd0\xb0\xd1\x86\xd1\x8e\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xbd\xd0\xb0\xd0\xb4 \xd0\xbf\xd0\xbe\xd1\x82\xd0\xbe\xd1\x87\xd0\xbd\xd0\xb8\xd0\xbc\xd0\xb8 \xd0\xb7\xd0\xbc\xd1\x96\xd0\xbd\xd0\xb0\xd0\xbc\xd0\xb8 (\xd0\xb4\xd0\xb8\xd0\xb2\xd1\x96\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f \xd1\x82\xd0\xb0\xd0\xba\xd0\xbe\xd0\xb6: git help everyday)\n   add       \xd0\x94\xd0\xbe\xd0\xb4\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb2\xd0\xbc\xd1\x96\xd1\x81\xd1\x82 \xd1\x84\xd0\xb0\xd0\xb9\xd0\xbb\xd1\x83 \xd0\xb4\xd0\xbe \xd1\x96\xd0\xbd\xd0\xb4\xd0\xb5\xd0\xba\xd1\x81\xd1\x83\n   mv        \xd0\x9f\xd0\xb5\xd1\x80\xd0\xb5\xd0\xbc\xd1\x96\xd1\x81\xd1\x82\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xbf\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb9\xd0\xbc\xd0\xb5\xd0\xbd\xd1\x83\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x84\xd0\xb0\xd0\xb9\xd0\xbb, \xd0\xb4\xd0\xb8\xd1\x80\xd0\xb5\xd0\xba\xd1\x82\xd0\xbe\xd1\x80\xd1\x96\xd1\x8e \xd0\xb0\xd0\xb1\xd0\xbe \xd1\x81\xd0\xb8\xd0\xbc\xd0\xb2\xd0\xbe\xd0\xbb\xd1\x8c\xd0\xbd\xd0\xb5 \xd0\xbf\xd0\xbe\xd1\x81\xd0\xb8\xd0\xbb\xd0\xb0\xd0\xbd\xd0\xbd\xd1\x8f\n   restore   \xd0\x92\xd1\x96\xd0\xb4\xd0\xbd\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x82\xd0\xb8 \xd1\x84\xd0\xb0\xd0\xb9\xd0\xbb\xd0\xb8 \xd1\x80\xd0\xbe\xd0\xb1\xd0\xbe\xd1\x87\xd0\xbe\xd0\xb3\xd0\xbe \xd0\xb4\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb2\xd0\xb0\n   rm        \xd0\x92\xd0\xb8\xd0\xb4\xd0\xb0\xd0\xbb\xd0\xb8\xd1\x82\xd0\xb8 \xd1\x84\xd0\xb0\xd0\xb9\xd0\xbb\xd0\xb8 \xd0\xb7 \xd1\x80\xd0\xbe\xd0\xb1\xd0\xbe\xd1\x87\xd0\xbe\xd0\xb3\xd0\xbe \xd0\xb4\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb2\xd0\xb0 \xd1\x82\xd0\xb0 \xd0\xb7 \xd1\x96\xd0\xbd\xd0\xb4\xd0\xb5\xd0\xba\xd1\x81\xd1\x83\n\n\xd0\xbf\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb3\xd0\xbb\xd1\x8f\xd0\xbd\xd1\x83\xd1\x82\xd0\xb8 \xd1\x96\xd1\x81\xd1\x82\xd0\xbe\xd1\x80\xd1\x96\xd1\x8e \xd1\x82\xd0\xb0 \xd1\x81\xd1\x82\xd0\xb0\xd0\xbd (\xd0\xb4\xd0\xb8\xd0\xb2\xd1\x96\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f \xd1\x82\xd0\xb0\xd0\xba\xd0\xbe\xd0\xb6: git help revisions)\n   bisect    \xd0\x92\xd0\xb8\xd0\xba\xd0\xbe\xd1\x80\xd0\xb8\xd1\x81\xd1\x82\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb1\xd1\x96\xd0\xbd\xd0\xb0\xd1\x80\xd0\xbd\xd0\xb8\xd0\xb9 \xd0\xbf\xd0\xbe\xd1\x88\xd1\x83\xd0\xba, \xd1\x89\xd0\xbe\xd0\xb1 \xd0\xb7\xd0\xbd\xd0\xb0\xd0\xb9\xd1\x82\xd0\xb8 \xd0\xba\xd0\xbe\xd0\xbc\xd1\x96\xd1\x82, \xd1\x8f\xd0\xba\xd0\xb8\xd0\xb9 \xd0\xb2\xd0\xbd\xd1\x96\xd1\x81 \xd0\xbf\xd0\xbe\xd0\xbc\xd0\xb8\xd0\xbb\xd0\xba\xd1\x83\n   diff      \xd0\x9f\xd0\xbe\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb7\xd0\xbc\xd1\x96\xd0\xbd\xd0\xb8 \xd0\xbc\xd1\x96\xd0\xb6 \xd0\xba\xd0\xbe\xd0\xbc\xd1\x96\xd1\x82\xd0\xb0\xd0\xbc\xd0\xb8, \xd0\xba\xd0\xbe\xd0\xbc\xd1\x96\xd1\x82\xd0\xbe\xd0\xbc \xd1\x82\xd0\xb0 \xd1\x80\xd0\xbe\xd0\xb1\xd0\xbe\xd1\x87\xd0\xb8\xd0\xbc \xd0\xb4\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb2\xd0\xbe\xd0\xbc, \xd1\x82\xd0\xbe\xd1\x89\xd0\xbe\n   grep      \xd0\x92\xd0\xb8\xd0\xb2\xd0\xb5\xd1\x81\xd1\x82\xd0\xb8 \xd1\x80\xd1\x8f\xd0\xb4\xd0\xba\xd0\xb8, \xd1\x89\xd0\xbe \xd0\xb2\xd1\x96\xd0\xb4\xd0\xbf\xd0\xbe\xd0\xb2\xd1\x96\xd0\xb4\xd0\xb0\xd1\x8e\xd1\x82\xd1\x8c \xd1\x88\xd0\xb0\xd0\xb1\xd0\xbb\xd0\xbe\xd0\xbd\xd1\x83\n   log       \xd0\x9f\xd0\xbe\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb6\xd1\x83\xd1\x80\xd0\xbd\xd0\xb0\xd0\xbb \xd0\xba\xd0\xbe\xd0\xbc\xd1\x96\xd1\x82\xd1\x83\n   show      \xd0\x9f\xd0\xbe\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x80\xd1\x96\xd0\xb7\xd0\xbd\xd1\x96 \xd1\x82\xd0\xb8\xd0\xbf\xd0\xb8 \xd0\xbe\xd0\xb1\xe2\x80\x99\xd1\x94\xd0\xba\xd1\x82\xd1\x96\xd0\xb2\n   status    \xd0\x9f\xd0\xbe\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x81\xd1\x82\xd0\xb0\xd0\xbd \xd1\x80\xd0\xbe\xd0\xb1\xd0\xbe\xd1\x87\xd0\xbe\xd0\xb3\xd0\xbe \xd0\xb4\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb2\xd0\xb0\n\n\xd1\x80\xd0\xbe\xd0\xb7\xd0\xb2\xd0\xb8\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8, \xd0\xbf\xd0\xbe\xd0\xb7\xd0\xbd\xd0\xb0\xd1\x87\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x82\xd0\xb0 \xd0\xbf\xd1\x96\xd0\xb4\xd0\xbf\xd1\x80\xd0\xb0\xd0\xb2\xd0\xbb\xd1\x8f\xd1\x82\xd0\xb8 \xd0\xb2\xd0\xb0\xd1\x88\xd1\x83 \xd1\x81\xd0\xbf\xd1\x96\xd0\xbb\xd1\x8c\xd0\xbd\xd1\x83 \xd1\x96\xd1\x81\xd1\x82\xd0\xbe\xd1\x80\xd1\x96\xd1\x8e\n   branch    \xd0\x9f\xd0\xbe\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd1\x82\xd0\xb8, \xd1\x81\xd1\x82\xd0\xb2\xd0\xbe\xd1\x80\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xb2\xd0\xb8\xd0\xb4\xd0\xb0\xd0\xbb\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xb3\xd1\x96\xd0\xbb\xd0\xba\xd0\xb8\n   commit    \xd0\x97\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x81\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb7\xd0\xbc\xd1\x96\xd0\xbd\xd0\xb8 \xd1\x83 \xd1\x81\xd1\x85\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x89\xd0\xb5\n   merge     \xd0\x9e\xd0\xb1\xca\xbc\xd1\x94\xd0\xb4\xd0\xbd\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb4\xd0\xb2\xd1\x96 \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xb1\xd1\x96\xd0\xbb\xd1\x8c\xd1\x88\xd0\xb5 \xd1\x96\xd1\x81\xd1\x82\xd0\xbe\xd1\x80\xd1\x96\xd0\xb9 \xd1\x80\xd0\xbe\xd0\xb7\xd1\x80\xd0\xbe\xd0\xb1\xd0\xba\xd0\xb8\n   rebase    \xd0\x97\xd0\xb0\xd1\x81\xd1\x82\xd0\xbe\xd1\x81\xd1\x83\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xba\xd0\xbe\xd0\xbc\xd1\x96\xd1\x82\xd0\xb8 \xd0\xbf\xd0\xbe\xd0\xb2\xd0\xb5\xd1\x80\xd1\x85 \xd1\x96\xd0\xbd\xd1\x88\xd0\xbe\xd1\x97 \xd0\xb2\xd0\xb5\xd1\x80\xd1\x85\xd1\x96\xd0\xb2\xd0\xba\xd0\xb8 \xd0\xb1\xd0\xb0\xd0\xb7\xd0\xb8\n   reset     \xd0\xa1\xd0\xba\xd0\xb8\xd0\xbd\xd1\x83\xd1\x82\xd0\xb8 \xd0\xbf\xd0\xbe\xd1\x82\xd0\xbe\xd1\x87\xd0\xbd\xd0\xb8\xd0\xb9 HEAD \xd0\xb4\xd0\xbe \xd0\xb2\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd0\xbd\xd0\xbe\xd0\xb3\xd0\xbe \xd1\x81\xd1\x82\xd0\xb0\xd0\xbd\xd1\x83\n   switch    \xd0\x9f\xd0\xb5\xd1\x80\xd0\xb5\xd0\xba\xd0\xbb\xd1\x8e\xd1\x87\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xb3\xd1\x96\xd0\xbb\xd0\xba\xd0\xb8\n   tag       \xd0\xa1\xd1\x82\xd0\xb2\xd0\xbe\xd1\x80\xd0\xb8\xd1\x82\xd0\xb8, \xd0\xbf\xd0\xbe\xd0\xba\xd0\xb0\xd0\xb7\xd0\xb0\xd1\x82\xd0\xb8, \xd0\xb2\xd0\xb8\xd0\xb4\xd0\xb0\xd0\xbb\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xbf\xd0\xb5\xd1\x80\xd0\xb5\xd0\xb2\xd1\x96\xd1\x80\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xbe\xd0\xb1\xca\xbc\xd1\x94\xd0\xba\xd1\x82 \xd1\x82\xd0\xb5\xd0\xb3\xd1\x83, \xd0\xbf\xd1\x96\xd0\xb4\xd0\xbf\xd0\xb8\xd1\x81\xd0\xb0\xd0\xbd\xd0\xb8\xd0\xb9 GPG\n\n\xd1\x81\xd0\xbf\xd1\x96\xd0\xb2\xd0\xbf\xd1\x80\xd0\xb0\xd1\x86\xd1\x8e\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 (\xd0\xb4\xd0\xb8\xd0\xb2\xd1\x96\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f \xd1\x82\xd0\xb0\xd0\xba\xd0\xbe\xd0\xb6: git help workflows)\n   fetch     \xd0\x97\xd0\xb0\xd0\xb2\xd0\xb0\xd0\xbd\xd1\x82\xd0\xb0\xd0\xb6\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xbe\xd0\xb1\xca\xbc\xd1\x94\xd0\xba\xd1\x82\xd0\xb8 \xd1\x82\xd0\xb0 \xd0\xbf\xd0\xbe\xd1\x81\xd0\xb8\xd0\xbb\xd0\xb0\xd0\xbd\xd0\xbd\xd1\x8f \xd0\xb7 \xd1\x96\xd0\xbd\xd1\x88\xd0\xbe\xd0\xb3\xd0\xbe \xd1\x81\xd1\x85\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x89\xd0\xb0\n   pull      \xd0\x9e\xd1\x82\xd1\x80\xd0\xb8\xd0\xbc\xd0\xb0\xd1\x82\xd0\xb8 \xd1\x82\xd0\xb0 \xd1\x96\xd0\xbd\xd1\x82\xd0\xb5\xd0\xb3\xd1\x80\xd1\x83\xd0\xb2\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xb7 \xd1\x96\xd0\xbd\xd1\x88\xd0\xb8\xd0\xbc \xd1\x81\xd1\x85\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x89\xd0\xb5\xd0\xbc \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xbb\xd0\xbe\xd0\xba\xd0\xb0\xd0\xbb\xd1\x8c\xd0\xbd\xd0\xbe\xd1\x8e \xd0\xb3\xd1\x96\xd0\xbb\xd0\xba\xd0\xbe\xd1\x8e\n   push      \xd0\x9e\xd0\xbd\xd0\xbe\xd0\xb2\xd0\xb8\xd1\x82\xd0\xb8 \xd0\xb2\xd1\x96\xd0\xb4\xd0\xb4\xd0\xb0\xd0\xbb\xd0\xb5\xd0\xbd\xd1\x96 \xd0\xbf\xd0\xbe\xd1\x81\xd0\xb8\xd0\xbb\xd0\xb0\xd0\xbd\xd0\xbd\xd1\x8f \xd1\x80\xd0\xb0\xd0\xb7\xd0\xbe\xd0\xbc \xd0\xb7 \xd0\xb0\xd1\x81\xd0\xbe\xd1\x86\xd1\x96\xd0\xb9\xd0\xbe\xd0\xb2\xd0\xb0\xd0\xbd\xd0\xb8\xd0\xbc\xd0\xb8 \xd0\xbe\xd0\xb1\xca\xbc\xd1\x94\xd0\xba\xd1\x82\xd0\xb0\xd0\xbc\xd0\xb8\n\n"git help -a" \xd1\x96 "git help -g" \xd0\xb2\xd0\xb8\xd0\xb2\xd0\xbe\xd0\xb4\xd1\x8f\xd1\x82\xd1\x8c \xd0\xb4\xd0\xbe\xd1\x81\xd1\x82\xd1\x83\xd0\xbf\xd0\xbd\xd1\x96 \xd0\xbf\xd1\x96\xd0\xb4\xd0\xba\xd0\xbe\xd0\xbc\xd0\xb0\xd0\xbd\xd0\xb4\xd0\xb8 \xd1\x82\xd0\xb0 \xd0\xb4\xd0\xb5\xd1\x8f\xd0\xba\xd1\x96\n\xd0\xbf\xd0\xbe\xd1\x81\xd1\x96\xd0\xb1\xd0\xbd\xd0\xb8\xd0\xba\xd0\xb8 \xd0\xb7 \xd0\xbf\xd0\xbe\xd0\xbd\xd1\x8f\xd1\x82\xd1\x8c. \xd0\x94\xd0\xb8\xd0\xb2\xd1\x96\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f "git help <\xd0\xba\xd0\xbe\xd0\xbc\xd0\xb0\xd0\xbd\xd0\xb4\xd0\xb0>" \xd0\xb0\xd0\xb1\xd0\xbe "git help <\xd0\xbf\xd0\xbe\xd0\xbd\xd1\x8f\xd1\x82\xd1\x82\xd1\x8f>\n\xd1\x89\xd0\xbe\xd0\xb1 \xd0\xbf\xd1\x80\xd0\xbe\xd1\x87\xd0\xb8\xd1\x82\xd0\xb0\xd1\x82\xd0\xb8 \xd0\xbf\xd1\x80\xd0\xbe \xd0\xba\xd0\xbe\xd0\xbd\xd0\xba\xd1\x80\xd0\xb5\xd1\x82\xd0\xbd\xd1\x83 \xd0\xbf\xd1\x96\xd0\xb4\xd0\xba\xd0\xbe\xd0\xbc\xd0\xb0\xd0\xbd\xd0\xb4\xd1\x83 \xd0\xb0\xd0\xb1\xd0\xbe \xd0\xbf\xd0\xbe\xd0\xbd\xd1\x8f\xd1\x82\xd1\x82\xd1\x8f.\n\xd0\x94\xd0\xb8\xd0\xb2\xd1\x96\xd1\x82\xd1\x8c\xd1\x81\xd1\x8f "git help git" \xd0\xb4\xd0\xbb\xd1\x8f \xd0\xbe\xd0\xb7\xd0\xbd\xd0\xb0\xd0\xb9\xd0\xbe\xd0\xbc\xd0\xbb\xd0\xb5\xd0\xbd\xd0\xbd\xd1\x8f \xd0\xb7 \xd1\x81\xd0\xb8\xd1\x81\xd1\x82\xd0\xb5\xd0\xbc\xd0\xbe\xd1\x8e.\n'"
+[0m12:58:06.350729 [debug] [MainThread]: STDERR: "b''"
+[0m12:58:06.351286 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m12:58:06.352043 [info ] [MainThread]: Connection:
+[0m12:58:06.352628 [info ] [MainThread]:   host: destination_postgres
+[0m12:58:06.353100 [info ] [MainThread]:   port: 5432
+[0m12:58:06.353540 [info ] [MainThread]:   user: postgres
+[0m12:58:06.353978 [info ] [MainThread]:   database: destination_db
+[0m12:58:06.354413 [info ] [MainThread]:   schema: public
+[0m12:58:06.354855 [info ] [MainThread]:   connect_timeout: 10
+[0m12:58:06.355293 [info ] [MainThread]:   role: None
+[0m12:58:06.355726 [info ] [MainThread]:   search_path: None
+[0m12:58:06.356156 [info ] [MainThread]:   keepalives_idle: 0
+[0m12:58:06.356587 [info ] [MainThread]:   sslmode: None
+[0m12:58:06.357088 [info ] [MainThread]:   sslcert: None
+[0m12:58:06.357522 [info ] [MainThread]:   sslkey: None
+[0m12:58:06.357952 [info ] [MainThread]:   sslrootcert: None
+[0m12:58:06.358391 [info ] [MainThread]:   application_name: dbt
+[0m12:58:06.358822 [info ] [MainThread]:   retries: 1
+[0m12:58:06.359772 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m12:58:06.603042 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m12:58:06.730945 [debug] [MainThread]: Using postgres connection "debug"
+[0m12:58:06.731614 [debug] [MainThread]: On debug: select 1 as id
+[0m12:58:06.732145 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m12:58:06.769155 [debug] [MainThread]: Postgres adapter: Got a retryable error when attempting to open a postgres connection.
+1 attempts remaining. Retrying in 0 seconds.
+Error:
+could not translate host name "destination_postgres" to address: nodename nor servname provided, or not known
+
+[0m12:58:06.772181 [debug] [MainThread]: Postgres adapter: Error running SQL: select 1 as id
+[0m12:58:06.772711 [debug] [MainThread]: Postgres adapter: Rolling back transaction.
+[0m12:58:06.773229 [debug] [MainThread]: On debug: No close available on handle
+[0m12:58:06.773754 [info ] [MainThread]:   Connection test: [[31mERROR[0m]
+
+[0m12:58:06.774382 [info ] [MainThread]: [31m2 checks failed:[0m
+[0m12:58:06.774964 [info ] [MainThread]: Project loading failed for the following reason:
+ project path </Users/test/omnip/dbt_project.yml> not found
+
+[0m12:58:06.775585 [info ] [MainThread]: dbt was unable to connect to the specified database.
+The database returned the following error:
+
+  >Database Error
+  could not translate host name "destination_postgres" to address: nodename nor servname provided, or not known
+  
+
+Check your database credentials and try again. For more information, visit:
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m12:58:06.777821 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.676632, "process_in_blocks": "0", "process_kernel_time": 0.456989, "process_mem_max_rss": "113086464", "process_out_blocks": "0", "process_user_time": 2.288566}
+[0m12:58:06.778608 [debug] [MainThread]: Command `dbt debug` failed at 12:58:06.778429 after 0.68 seconds
+[0m12:58:06.779145 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m12:58:06.779709 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b461ba0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10abfd5b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a6196a0>]}
+[0m12:58:06.780364 [debug] [MainThread]: Flushing usage events
+[0m12:58:07.374298 [debug] [MainThread]: An error was encountered while trying to flush usage events
