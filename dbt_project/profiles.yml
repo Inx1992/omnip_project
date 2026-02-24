@@ -1,12 +1,11 @@
 omnip:
   outputs:
     dev:
-      type: redshift
-      host: "{{ env_var('REDSHIFT_HOST', 'localhost') }}"
-      user: "{{ env_var('REDSHIFT_USER', 'temporary_user') }}"
-      password: "{{ env_var('REDSHIFT_PASSWORD', 'temporary_password') }}"
-      port: 5439
-      dbname: dev
-      schema: public
+      type: athena
+      s3_staging_dir: s3://omnip-athena-results-dev-2026/results/
+      region_name: us-east-1
+      database: awsdatacatalog
+      schema: omnip_db_dev
+      workgroup: omnip_dev_workgroup # <--- ДОДАЙ ЦЕЙ РЯДОК
       threads: 4
   target: dev

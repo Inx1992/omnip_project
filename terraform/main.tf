@@ -2,18 +2,14 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# 1. Отримуємо твій поточний IP для доступу
 data "http" "my_ip" {
   url = "https://api.ipify.org"
 }
 
-# 2. Використовуємо стандартну мережу
 resource "aws_default_vpc" "default" {}
 
-# 3. Security Group (Файрвол)
 resource "aws_security_group" "redshift_sg" {
-  name        = "redshift-allow-my-ip-v2"
-  description = "Allow access to Redshift from my current IP"
+  name        = "omnip-redshift-access"
   vpc_id      = aws_default_vpc.default.id
 
   ingress {
@@ -26,64 +22,116 @@ resource "aws_security_group" "redshift_sg" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "tcp"
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-# 4. S3 бакети
-# Основний бакет для даних (Bronze, Silver, Gold папки будуть тут)
 resource "aws_s3_bucket" "raw_data" {
-  bucket = "omnip-raw-data-dev-2026-v1" 
+  bucket        = "omnip-data-lake-dev-2026" 
+  force_destroy = true
 }
 
-# Бакет для технічних результатів Athena (обов'язково для роботи SQL)
 resource "aws_s3_bucket" "athena_results" {
-  bucket = "omnip-athena-results-dev-2026-v1"
+  bucket        = "omnip-athena-results-dev-2026"
+  force_destroy = true
 }
 
-# 5. AWS Athena (Serverless SQL двигун)
+resource "aws_glue_catalog_database" "dbt_db" {
+  name = "omnip_db_dev"
+}
+
 resource "aws_athena_workgroup" "main" {
-  name = "primary"
+  name          = "omnip_dev_workgroup"
+  force_destroy = true
 
   configuration {
-    enforce_workgroup_configuration    = true
+    # Вимикаємо примус, щоб dbt міг сам створювати таблиці (шар Gold)
+    enforce_workgroup_configuration    = false
     publish_cloudwatch_metrics_enabled = true
 
     result_configuration {
-      output_location = "s3://${aws_s3_bucket.athena_results.bucket}/"
+      output_location = "s3://${aws_s3_bucket.athena_results.bucket}/results/"
     }
   }
 }
 
-# --- REDSHIFT ТИМЧАСОВО ВИМКНЕНО ДЛЯ ЕКОНОМІЇ ---
-/*
-resource "aws_redshift_cluster" "omnip_redshift" {
-  cluster_identifier = "omnip-cluster-dev-v2"
-  database_name      = "dev"
-  master_username    = "admin"
-  master_password    = var.db_password 
+resource "aws_glue_catalog_table" "nbu_rates_raw" {
+  name          = "nbu_rates_raw"
+  database_name = aws_glue_catalog_database.dbt_db.name
+  table_type    = "EXTERNAL_TABLE"
 
-  node_type          = "ra3.xlplus"
-  cluster_type       = "single-node"
-  
-  vpc_security_group_ids = [aws_security_group.redshift_sg.id]
+  parameters = {
+    "classification"  = "parquet"
+    "compressionType" = "none"
+    "typeOfData"      = "file"
+  }
 
-  publicly_accessible = true
-  skip_final_snapshot = true
+  storage_descriptor {
+    location      = "s3://${aws_s3_bucket.raw_data.bucket}/bronze/nbu_rates/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "parquet-serde"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+    }
+
+    columns {
+      name = "r030"
+      type = "int"
+    }
+    columns {
+      name = "txt"
+      type = "string"
+    }
+    columns {
+      name = "rate"
+      type = "double"
+    }
+    columns {
+      name = "cc"
+      type = "string"
+    }
+    columns {
+      name = "exchangedate"
+      type = "string"
+    }
+    columns {
+      name = "ingested_at"
+      type = "string"
+    }
+    columns {
+      name = "extraction_date"
+      type = "string"
+    }
+  }
+
+  partition_keys {
+    name = "year"
+    type = "string"
+  }
+  partition_keys {
+    name = "month"
+    type = "string"
+  }
 }
-*/
 
-# --- OUTPUTS ---
+# --- Outputs для налаштування dbt ---
 
-output "s3_bucket_name" {
+output "data_lake_bucket" {
   value = aws_s3_bucket.raw_data.id
 }
 
-output "athena_workgroup" {
+output "athena_results_bucket" {
+  value = aws_s3_bucket.athena_results.id
+}
+
+output "athena_workgroup_name" {
   value = aws_athena_workgroup.main.name
 }
 
-# output "redshift_endpoint" {
-#   value = aws_redshift_cluster.omnip_redshift.endpoint
-# }
+output "s3_staging_dir" {
+  description = "Використовуй це значення у своєму profiles.yml для dbt"
+  value       = "s3://${aws_s3_bucket.athena_results.bucket}/results/"
+}

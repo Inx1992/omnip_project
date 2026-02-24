@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: fct_monthly_currency_avg
+    description: "Aggregated exchange rate data calculated on a monthly basis."
+    columns:
+      - name: currency_code
+        description: "ISO currency code (e.g., USD, EUR)."
+        tests:
+          - not_null
+      - name: avg_monthly_rate
+        description: "The average exchange rate for the specific month."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false

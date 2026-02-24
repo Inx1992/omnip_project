@@ -6,7 +6,11 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.42.54",
+    "dbt-athena-community>=1.10.0",
     "dbt-core>=1.11.6",
     "dbt-redshift>=1.10.1",
+    "pandas>=3.0.1",
+    "pyarrow>=23.0.1",
     "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
 ]
