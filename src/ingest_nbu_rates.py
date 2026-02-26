@@ -2,6 +2,9 @@ import requests
 import pandas as pd
 import awswrangler as wr
 import boto3
+import subprocess
+import sys
+import os
 from datetime import datetime
 
 # --- CONFIGURATION ---
@@ -19,13 +22,29 @@ def fetch_nbu_data():
     response.raise_for_status()
     return response.json()
 
+def run_dbt():
+    """Execute dbt transformations and wait for completion"""
+    print("\n🚀 Starting dbt transformations...")
+    # Використовуємо subprocess.run, щоб Python чекав на завершення dbt
+    # Вказуємо шлях до проектної папки dbt
+    result = subprocess.run(
+        ["dbt", "run", "--project-dir", "./dbt"],
+        capture_output=False, # Виводити логи dbt прямо в консоль
+        text=True
+    )
+    
+    if result.returncode != 0:
+        print(f"❌ dbt run failed with exit code {result.returncode}")
+        sys.exit(1)
+    
+    print("✅ dbt transformations finished successfully!")
+
 def main():
     try:
         # 0. Initialize AWS session
         session = boto3.Session(region_name=REGION)
         
         # 1. DATABASE CHECK
-        # Ensure the Glue database exists before writing data
         existing_dbs = wr.catalog.databases(boto3_session=session)
         if DATABASE not in existing_dbs.values:
             print(f"Database {DATABASE} not found. Creating...")
@@ -35,22 +54,19 @@ def main():
         json_data = fetch_nbu_data()
         df = pd.DataFrame(json_data)
         
-        # Rename columns to match Athena/dbt schema and add audit metadata
+        # Rename columns and add audit metadata
         df['ingested_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         # 3. PARTITIONING & PATHING
         now = datetime.now()
         year, month, day = now.year, f"{now.month:02d}", f"{now.day:02d}"
         
-        # Define partition path and fixed filename for idempotency
         partition_path = f"{S3_BASE_PATH}year={year}/month={month}/day={day}/"
         full_path = f"{partition_path}daily_snapshot.parquet"
         
-        # Remove partition columns from the dataframe to avoid duplication in Athena
         df_save = df.drop(columns=['year', 'month', 'day'], errors='ignore')
 
         # 4. S3 LOADING
-        # Use dataset=False because Terraform manages metadata via Partition Projection
         print(f"Uploading to S3: {full_path}")
         wr.s3.to_parquet(
             df=df_save,
@@ -61,8 +77,13 @@ def main():
         
         print(f"✅ Success! Data updated for {year}-{month}-{day}")
 
+        # 5. DBT RUN
+        # Тепер запускаємо dbt і чекаємо результату
+        run_dbt()
+
     except Exception as e:
-        print(f"❌ Error occurred: {e}")
+        print(f"❌ Critical error occurred: {e}")
+        sys.exit(1) # Повідомляємо GitHub Actions, що робота провалена
 
 if __name__ == "__main__":
     main()
