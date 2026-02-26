@@ -13,8 +13,9 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              inclusive: false
+              arguments: # Додано для сумісності з новими версіями
+                min_value: 0
+                inclusive: false
 
   - name: fct_currency_growth
     description: "Порівняння курсу з попереднім днем (динаміка росту/падіння)."

@@ -3,7 +3,7 @@
 select
     cast(r030 as int) as currency_id,
     txt as currency_name,
-    cast("rate" as double) as currency_rate,
+    cast(rate as double) as currency_rate,
     cc as currency_code,
     -- Конвертуємо рядки в правильні типи один раз тут
     try(date_parse(exchangedate, '%d.%m.%Y')) as exchange_date,
