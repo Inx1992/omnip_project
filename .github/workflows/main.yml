@@ -1,0 +1,47 @@
+name: Run NBU Ingestion and dbt
+
+on:
+  push:
+    branches: [main] # Запускається при кожному пуші в main
+  workflow_dispatch: # Дозволяє запускати вручну кнопкою
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t nbu-app .
+
+      - name: Run Scraper and dbt
+        env:
+          # Передаємо секрети з GitHub у контейнер
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_STAGING_DIR: ${{ secrets.AWS_S3_STAGING_DIR }}
+          ATHENA_DATABASE: ${{ secrets.ATHENA_DATABASE }}
+          ATHENA_SCHEMA: ${{ secrets.ATHENA_SCHEMA }}
+        run: |
+          # 1. Запускаємо скрейпер
+          docker run --rm \
+            -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+            -e AWS_REGION=$AWS_REGION \
+            nbu-app python src/ingest_nbu_rates.py
+
+          # 2. Запускаємо dbt
+          docker run --rm \
+            -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+            -e AWS_REGION=$AWS_REGION \
+            -e AWS_S3_STAGING_DIR=$AWS_S3_STAGING_DIR \
+            -e ATHENA_DATABASE=$ATHENA_DATABASE \
+            -e ATHENA_SCHEMA=$ATHENA_SCHEMA \
+            nbu-app dbt run --project-dir dbt

@@ -27,7 +27,6 @@ def fetch_and_save_historical():
                 continue
 
             # 2. Transformation
-            df = df.rename(columns={'rate': 'currency_rate'})
             df['ingested_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             
             year = current_date.year

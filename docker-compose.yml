@@ -1,19 +1,21 @@
-version: '3.8'
+version: "3.8"
 
 services:
+  # Крок 1: Скрейпер (Python + uv)
+  # Виконує завантаження сирих даних у S3
   scraper:
     build: .
-    volumes:
-      - .:/app
     env_file: .env
-    command: python src/main.py
+    command: python src/ingest_nbu_rates.py
 
+  # Крок 2: Трансформації (dbt + Athena)
+  # Запускається тільки після успішного завершення скрейпера
   dbt:
     build: .
-    volumes:
-      - .:/app
     env_file: .env
     depends_on:
       scraper:
         condition: service_completed_successfully
-    command: dbt run --project-dir dbt_project --profiles-dir dbt_project
+    # Завдяки ENV DBT_PROFILES_DIR=/app/dbt у Dockerfile,
+    # команда стає дуже короткою:
+    command: dbt run --project-dir dbt

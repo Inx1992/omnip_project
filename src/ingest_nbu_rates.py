@@ -36,7 +36,6 @@ def main():
         df = pd.DataFrame(json_data)
         
         # Rename columns to match Athena/dbt schema and add audit metadata
-        df = df.rename(columns={'rate': 'currency_rate'})
         df['ingested_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         # 3. PARTITIONING & PATHING
