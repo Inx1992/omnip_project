@@ -3,8 +3,14 @@ FROM python:3.11-slim
 # 1. Встановлюємо uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# 2. Встановлюємо системні залежності для dbt-athena (потрібен git)
-RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+# 2. Встановлюємо системні залежності
+# Додаємо build-essential, libxml2-dev та libxslt-dev для збірки lxml
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    libxml2-dev \
+    libxslt-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -18,9 +24,7 @@ COPY . .
 # 5. Налаштовуємо оточення
 ENV PATH="/app/.venv/bin:$PATH"
 ENV DBT_PROFILES_DIR=/app/dbt
-# Вимикаємо анонімну статистику dbt для швидкості
 ENV DBT_SEND_ANONYMOUS_USAGE_STATS=False
 
-# За замовчуванням запускаємо скрейпер, 
-# але в Airflow ми будемо перебивати цю команду
+# Команда за замовчуванням
 CMD ["python", "src/ingest_nbu_rates.py"]
