@@ -25,11 +25,9 @@ def fetch_nbu_data():
 def run_dbt():
     """Execute dbt transformations and wait for completion"""
     print("\n🚀 Starting dbt transformations...")
-    # Використовуємо subprocess.run, щоб Python чекав на завершення dbt
-    # Вказуємо шлях до проектної папки dbt
     result = subprocess.run(
         ["dbt", "run", "--project-dir", "./dbt"],
-        capture_output=False, # Виводити логи dbt прямо в консоль
+        capture_output=False,
         text=True
     )
     
@@ -54,7 +52,12 @@ def main():
         json_data = fetch_nbu_data()
         df = pd.DataFrame(json_data)
         
-        # Rename columns and add audit metadata
+        # --- ДІАГНОСТИКА КОЛОНОК ---
+        print(f"DEBUG: Available columns from API: {df.columns.tolist()}")
+        print(f"DEBUG: First row sample:\n{df.head(1).to_dict(orient='records')}")
+        # ---------------------------
+        
+        # Add audit metadata
         df['ingested_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         # 3. PARTITIONING & PATHING
@@ -64,6 +67,7 @@ def main():
         partition_path = f"{S3_BASE_PATH}year={year}/month={month}/day={day}/"
         full_path = f"{partition_path}daily_snapshot.parquet"
         
+        # Видаляємо колонки партицій, якщо вони випадково прийшли з API
         df_save = df.drop(columns=['year', 'month', 'day'], errors='ignore')
 
         # 4. S3 LOADING
@@ -75,15 +79,14 @@ def main():
             boto3_session=session
         )
         
-        print(f"✅ Success! Data updated for {year}-{month}-{day}")
+        print(f"✅ Success! Data uploaded to S3 for {year}-{month}-{day}")
 
         # 5. DBT RUN
-        # Тепер запускаємо dbt і чекаємо результату
         run_dbt()
 
     except Exception as e:
         print(f"❌ Critical error occurred: {e}")
-        sys.exit(1) # Повідомляємо GitHub Actions, що робота провалена
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
