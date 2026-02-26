@@ -1,6 +1,0 @@
-sources:
-  - name: omnip # <--- This must match the first argument in source()
-    database: awsdatacatalog
-    schema: omnip_db_dev
-    tables:
-      - name: nbu_rates_raw

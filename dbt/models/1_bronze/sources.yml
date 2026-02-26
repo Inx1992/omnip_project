@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: nbu_api
+    database: awsdatacatalog # <--- Перевір назву в консолі AWS!
+    schema: omnip_db_dev # <--- Це твоя база даних (Database) в Athena
+    tables:
+      - name: nbu_rates_raw
