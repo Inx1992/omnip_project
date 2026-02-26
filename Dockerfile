@@ -22,6 +22,9 @@ RUN uv sync --frozen --no-install-project
 # 4. Копіюємо проект
 COPY . .
 
+# Використовуємо шлях до venv, щоб точно знайти dbt
+RUN .venv/bin/dbt deps --project-dir ./dbt
+
 # 5. Налаштовуємо оточення
 ENV PATH="/app/.venv/bin:$PATH"
 ENV DBT_PROFILES_DIR=/app/dbt
