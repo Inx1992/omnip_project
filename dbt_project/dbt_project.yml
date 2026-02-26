@@ -13,19 +13,9 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-# Ця команда буде запускатися перед кожним dbt run,
-# щоб Athena бачила нові дані (партиції) на S3
-on-run-start:
-  - "MSCK REPAIR TABLE omnip_db_dev.nbu_rates_raw"
-
 models:
   omnip:
-    # Шар 1_bronze: зазвичай це просто джерела, але якщо є моделі — робимо їх view
-    1_bronze:
-      +materialized: view
-    # Шар 2_silver: очищені дані, теж робимо view для економії місця
     2_silver:
       +materialized: view
-    # Шар 3_gold: агрегати для аналітики, робимо як table для швидкості запитів
     3_gold:
       +materialized: table

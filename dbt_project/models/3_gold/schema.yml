@@ -2,17 +2,30 @@ version: 2
 
 models:
   - name: fct_monthly_currency_avg
-    description: "Aggregated exchange rate data calculated on a monthly basis."
+    description: "Агреговані дані курсів валют на місячній основі."
     columns:
       - name: currency_code
-        description: "ISO currency code (e.g., USD, EUR)."
+        description: "Код валюти (напр., USD, EUR)."
         tests:
           - not_null
       - name: avg_monthly_rate
-        description: "The average exchange rate for the specific month."
+        description: "Середній курс за вказаний місяць."
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              arguments:
-                min_value: 0
-                inclusive: false
+              min_value: 0
+              inclusive: false
+
+  - name: fct_currency_growth
+    description: "Порівняння курсу з попереднім днем (динаміка росту/падіння)."
+    columns:
+      - name: currency_code
+        description: "Код валюти."
+        tests:
+          - not_null
+      - name: exchange_date
+        description: "Дата курсу."
+        tests:
+          - not_null
+      - name: delta_percent
+        description: "Відсоток зміни вартості порівняно з попереднім днем."

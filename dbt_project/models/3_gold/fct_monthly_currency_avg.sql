@@ -6,8 +6,8 @@ with monthly_data as (
         currency_name,
         year,
         month,
-        exchange_rate
-    from {{ ref('stg_nbu_rates') }} -- Переконайся, що тут назва збігається з файлом у Silver
+        currency_rate 
+    from {{ ref('stg_nbu_rates') }}
 )
 
 select
@@ -15,8 +15,10 @@ select
     currency_name,
     year,
     month,
-    avg(exchange_rate) as avg_monthly_rate,
-    max(exchange_rate) as max_rate,
-    min(exchange_rate) as min_rate
+    round(avg(currency_rate), 4) as avg_monthly_rate,
+    max(currency_rate) as max_rate,
+    min(currency_rate) as min_rate,
+    count(*) as days_count 
 from monthly_data
 group by 1, 2, 3, 4
+order by year desc, month desc, avg_monthly_rate desc

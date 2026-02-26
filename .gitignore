@@ -14,12 +14,25 @@ dbt_project/logs/
 dbt_project/target/
 dbt_project/dbt_modules/
 dbt_project/profiles.yml
+dbt_project/catalog.json
+dbt_project/manifest.json
+dbt_project/run_results.json
 
 # Terraform
+# Terraform технічні файли
 .terraform/
 *.tfstate
+*.tfstate.*.backup
 *.tfstate.backup
+*.tfstate.lock.info
+
+# Файли змінних (можуть містити секрети)
 *.tfvars
+*.tfvars.json
+
+# Файли перевизначення конфігурації
+override.tf
+override.tf.json
 
 .vscode/
 .idea/

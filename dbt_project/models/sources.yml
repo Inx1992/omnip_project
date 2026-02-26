@@ -1,7 +1,5 @@
-version: 2
-
 sources:
-  - name: nbu_api
+  - name: omnip # <--- This must match the first argument in source()
     database: awsdatacatalog
     schema: omnip_db_dev
     tables:
