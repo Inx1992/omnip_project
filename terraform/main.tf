@@ -11,8 +11,8 @@ data "http" "my_ip" {
 resource "aws_default_vpc" "default" {}
 
 resource "aws_security_group" "redshift_sg" {
-  name        = "omnip-redshift-access"
-  vpc_id      = aws_default_vpc.default.id
+  name   = "omnip-redshift-access"
+  vpc_id = aws_default_vpc.default.id
 
   ingress {
     from_port   = 5439
@@ -93,83 +93,9 @@ resource "aws_athena_workgroup" "main" {
   depends_on = [aws_cloudwatch_log_group.athena_logs]
 }
 
-resource "aws_glue_catalog_table" "nbu_rates_raw" {
-  name          = "nbu_rates_raw"
-  database_name = aws_glue_catalog_database.dbt_db.name
-  table_type    = "EXTERNAL_TABLE"
+# ПРИМІТКА: Таблиця nbu_rates_raw тепер створюється автоматично через Python-скрипт (awswrangler)
 
-  parameters = {
-    "classification"                    = "parquet"
-    "compressionType"                   = "none"
-    "typeOfData"                        = "file"
-    # Налаштування Partition Projection
-    "projection.enabled"                = "true"
-    "projection.year.type"              = "integer"
-    "projection.year.range"             = "2024,2030"
-    "projection.month.type"             = "integer"
-    "projection.month.range"            = "1,12"
-    "projection.month.digits"           = "2"
-    "projection.day.type"               = "integer"
-    "projection.day.range"              = "1,31"
-    "projection.day.digits"             = "2"
-    "storage.location.template"         = "s3://omnip-data-lake-dev-2026/bronze/nbu_rates/year=$${year}/month=$${month}/day=$${day}/"
-  }
-
-  partition_keys {
-    name = "year"
-    type = "string"
-  }
-  partition_keys {
-    name = "month"
-    type = "string"
-  }
-  partition_keys {
-    name = "day"
-    type = "string"
-  }
-
-  storage_descriptor {
-    location      = "s3://omnip-data-lake-dev-2026/bronze/nbu_rates/"
-    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
-
-    ser_de_info {
-      name                  = "parquet-serde"
-      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
-    }
-
-    columns {
-      name = "r030"
-      type = "int"
-    }
-    columns {
-      name = "txt"
-      type = "string"
-    }
-    columns {
-      name = "currency_rate"
-      type = "double"
-    }
-    columns {
-      name = "cc"
-      type = "string"
-    }
-    columns {
-      name = "exchangedate"
-      type = "string"
-    }
-    columns {
-      name = "ingested_at"
-      type = "string"
-    }
-    columns {
-      name = "extraction_date"
-      type = "string"
-    }
-  }
-}
-
-# --- КОНТРОЛЬ ВИТРАТ: Бюджет на $5 ---
+# --- Контроль витрат ---
 
 resource "aws_budgets_budget" "monthly_limit" {
   name              = "omnip-monthly-5-usd-limit"
