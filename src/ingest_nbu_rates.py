@@ -47,41 +47,40 @@ def main():
         if DATABASE not in existing_dbs.values:
             print(f"Database {DATABASE} not found. Creating...")
             wr.catalog.create_database(name=DATABASE, boto3_session=session)
+
+        # --- КРОК 1.5: ОЧИЩЕННЯ СТАРИХ МЕТАДАНИХ ---
+        # Видаляємо лише опис таблиці, щоб Wrangler створив його заново з правильними колонками
+        print(f"Cleaning up old metadata for {DATABASE}.{TABLE}...")
+        wr.catalog.delete_table_if_exists(database=DATABASE, table=TABLE, boto3_session=session)
         
         # 2. DATA EXTRACTION & TRANSFORMATION
         json_data = fetch_nbu_data()
         df = pd.DataFrame(json_data)
         
-        # --- ДІАГНОСТИКА КОЛОНОК ---
-        print(f"DEBUG: Available columns from API: {df.columns.tolist()}")
-        print(f"DEBUG: First row sample:\n{df.head(1).to_dict(orient='records')}")
-        # ---------------------------
-        
-        # Add audit metadata
-        df['ingested_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        # 3. PARTITIONING & PATHING
+        # Add audit metadata and time components for partitioning
         now = datetime.now()
-        year, month, day = now.year, f"{now.month:02d}", f"{now.day:02d}"
+        df['ingested_at'] = now.strftime('%Y-%m-%d %H:%M:%S')
+        df['year'] = now.strftime('%Y')
+        df['month'] = now.strftime('%m')
+        df['day'] = now.strftime('%d')
         
-        partition_path = f"{S3_BASE_PATH}year={year}/month={month}/day={day}/"
-        full_path = f"{partition_path}daily_snapshot.parquet"
-        
-        # Видаляємо колонки партицій, якщо вони випадково прийшли з API
-        df_save = df.drop(columns=['year', 'month', 'day'], errors='ignore')
-
-        # 4. S3 LOADING
-        print(f"Uploading to S3: {full_path}")
+        # 3. S3 LOADING & CATALOG SYNC
+        # Використовуємо dataset=True, щоб Wrangler сам зареєстрував всі колонки в Glue
+        print(f"Uploading data and syncing Glue Catalog for {now.date()}...")
         wr.s3.to_parquet(
-            df=df_save,
-            path=full_path,
-            dataset=False,
+            df=df,
+            path=S3_BASE_PATH,
+            dataset=True,
+            database=DATABASE,
+            table=TABLE,
+            partition_cols=['year', 'month', 'day'],
+            mode="overwrite_partitions",
             boto3_session=session
         )
         
-        print(f"✅ Success! Data uploaded to S3 for {year}-{month}-{day}")
+        print(f"✅ Success! Data synced to S3 and Glue Catalog.")
 
-        # 5. DBT RUN
+        # 4. DBT RUN
         run_dbt()
 
     except Exception as e:
