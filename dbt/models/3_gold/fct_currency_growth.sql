@@ -1,51 +1,65 @@
 {{ config(materialized='table') }}
 
-with deduplicated_silver as (
-    -- Крок 1: Беремо тільки ОДИН (останній) запис для кожної валюти на кожен день
+with daily_changes as (
+    -- Крок 1: Розраховуємо щоденні зміни (дельту)
     select
         currency_code,
         currency_name,
         exchange_date,
+        -- Використовуємо date_trunc для групування по місяцях
+        date_trunc('month', exchange_date) as report_month,
         currency_rate,
-        row_number() over (
-            partition by currency_code, exchange_date 
-            order by ingested_at desc
-        ) as rn
-    from {{ ref('fct_currency_rates') }}
-),
-
-daily_rates as (
-    -- Крок 2: Фільтруємо дублікати
-    select
-        currency_code,
-        currency_name,
-        exchange_date,
-        currency_rate
-    from deduplicated_silver
-    where rn = 1
-),
-
-ordered_rates as (
-    -- Крок 3: Розраховуємо попередній курс (lag)
-    select
-        *,
         lag(currency_rate) over (
             partition by currency_code 
             order by exchange_date
-        ) as prev_rate
-    from daily_rates
+        ) as prev_day_rate
+    from {{ ref('fct_currency_rates') }}
+),
+
+daily_metrics as (
+    -- Крок 2: Рахуємо дельту для кожного дня
+    select 
+        *,
+        (currency_rate - prev_day_rate) as daily_delta
+    from daily_changes
+),
+
+monthly_aggregation as (
+    -- Крок 3: Агрегуємо дані за місяць
+    select
+        currency_code,
+        currency_name,
+        report_month,
+        -- Початковий курс місяця (курс на першу дату місяця)
+        min_by(currency_rate, exchange_date) as month_start_rate,
+        -- Кінцевий курс місяця (курс на останню дату місяця)
+        max_by(currency_rate, exchange_date) as month_end_rate,
+        
+        -- Середній позитивний приріст (тільки коли валюта росла)
+        avg(case when daily_delta > 0 then daily_delta end) as avg_positive_delta,
+        
+        -- Середнє падіння (тільки коли валюта падала)
+        avg(case when daily_delta < 0 then daily_delta end) as avg_negative_delta,
+        
+        -- Загальна кількість днів росту та падіння
+        count(case when daily_delta > 0 then 1 end) as days_of_growth,
+        count(case when daily_delta < 0 then 1 end) as days_of_decline
+    from daily_metrics
+    group by 1, 2, 3
 )
 
 select
     currency_code,
     currency_name,
-    exchange_date,
-    currency_rate as current_rate,
-    prev_rate as previous_rate,
-    -- рахуємо різницю
-    round(currency_rate - prev_rate, 4) as delta_abs,
-    -- рахуємо % (nullif для безпеки)
-    round(((currency_rate - prev_rate) / nullif(prev_rate, 0)) * 100, 2) as growth_percentage
-from ordered_rates
-where prev_rate is not null -- зазвичай для росту нам потрібне порівняння
-order by exchange_date desc, growth_percentage desc
+    report_month,
+    month_start_rate,
+    month_end_rate,
+    -- Загальний ріст/падіння за місяць у %
+    round(((month_end_rate - month_start_rate) / nullif(month_start_rate, 0)) * 100, 2) as total_monthly_growth_pct,
+    -- Середні значення коливань
+    round(avg_positive_delta, 4) as avg_daily_gain,
+    round(avg_negative_delta, 4) as avg_daily_loss,
+    days_of_growth,
+    days_of_decline
+from monthly_aggregation
+order by report_month desc, total_monthly_growth_pct desc
