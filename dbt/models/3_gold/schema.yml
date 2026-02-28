@@ -13,8 +13,10 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              inclusive: false
+              # Всі аргументи мають бути всередині блоку arguments
+              arguments:
+                min_value: 0
+                inclusive: false
 
   - name: fct_currency_growth
     description: "Місячна динаміка росту та падіння валют (Gold layer)."
