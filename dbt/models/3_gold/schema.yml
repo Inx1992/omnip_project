@@ -13,20 +13,27 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              arguments: # Додано для сумісності з новими версіями
-                min_value: 0
-                inclusive: false
+              min_value: 0
+              inclusive: false
 
   - name: fct_currency_growth
-    description: "Порівняння курсу з попереднім днем (динаміка росту/падіння)."
+    description: "Місячна динаміка росту та падіння валют (Gold layer)."
     columns:
       - name: currency_code
         description: "Код валюти."
         tests:
           - not_null
-      - name: exchange_date
-        description: "Дата курсу."
+      - name: report_month
+        description: "Перше число місяця, за який зроблено звіт (результат date_trunc)."
         tests:
           - not_null
-      - name: delta_percent
-        description: "Відсоток зміни вартості порівняно з попереднім днем."
+      - name: month_start_rate
+        description: "Курс на початок місяця."
+        tests:
+          - not_null
+      - name: month_end_rate
+        description: "Курс на кінець місяця."
+        tests:
+          - not_null
+      - name: total_monthly_growth_pct
+        description: "Загальний ріст/падіння за місяць у %."
