@@ -6,7 +6,6 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    # 17:00 за Києвом (UTC+2)
     - cron: "0 15 * * *"
 
 jobs:
@@ -15,12 +14,11 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Оновлено до v4
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Кешування шарів Docker значно прискорить повторні запуски
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -31,9 +29,8 @@ jobs:
       - name: Load Docker image
         run: docker load --input /tmp/nbu-app.tar
 
-      - name: Run Scraper and dbt
+      - name: Run Scraper and dbt (Inside Docker)
         env:
-          # Витягуємо секрети GitHub у змінні оточення раннера
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -49,3 +46,26 @@ jobs:
             -e ATHENA_DATABASE="${{ secrets.ATHENA_DATABASE }}" \
             -e ATHENA_SCHEMA="${{ secrets.ATHENA_SCHEMA }}" \
             nbu-app python src/ingest_nbu_rates.py
+
+      # --- Новий блок для генерації анімації ---
+      - name: Set up Python for Visualization
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Viz Dependencies
+        run: pip install pandas matplotlib pyathena pillow boto3
+
+      - name: Generate GIF Animation
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          S3_STAGING_DIR: ${{ secrets.AWS_S3_STAGING_DIR }}
+        run: python src/visualize_rates.py
+
+      - name: Upload GIF Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: currency-animation
+          path: usd_trend.gif

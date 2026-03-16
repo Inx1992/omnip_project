@@ -13,6 +13,9 @@ dependencies = [
     "pyarrow>=14.0.0", # Важливо для роботи з Parquet
     "python-dotenv>=1.0.0",
     "requests>=2.31.0",
+    "matplotlib>=3.8.0",
+    "pyathena>=3.0.0",
+    "pillow>=10.0.0",
 ]
 
 [build-system]
