@@ -45,7 +45,7 @@ jobs:
             -e AWS_S3_STAGING_DIR="${{ secrets.AWS_S3_STAGING_DIR }}" \
             -e ATHENA_DATABASE="${{ secrets.ATHENA_DATABASE }}" \
             -e ATHENA_SCHEMA="${{ secrets.ATHENA_SCHEMA }}" \
-            nbu-app python src/ingest_nbu_rates.py
+            nbu-app sh -c "python src/ingest_nbu_rates.py && cd dbt && dbt build"
 
       # --- Новий блок для генерації анімації ---
       - name: Set up Python for Visualization
