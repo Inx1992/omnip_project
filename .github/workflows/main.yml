@@ -54,7 +54,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install Viz Dependencies
-        run: pip install pandas matplotlib pyathena pillow boto3
+        run: pip install pandas matplotlib seaborn pyathena pillow boto3
 
       - name: Generate GIF Animation
         env:
@@ -64,8 +64,8 @@ jobs:
           S3_STAGING_DIR: ${{ secrets.AWS_S3_STAGING_DIR }} # Використовуємо ту саму назву, що в visualize_rates.py
         run: python src/visualize_rates.py
 
-      - name: Upload GIF Artifact
+      - name: Upload Analysis Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: currency-animation
-          path: usd_trend.gif
+          name: currency-analysis
+          path: usd_eur_bivariate.png
