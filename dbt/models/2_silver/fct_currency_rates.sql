@@ -11,19 +11,17 @@ with bronze_data as (
     select * from {{ ref('stg_nbu_rates') }}
 ),
 
--- 1. Створюємо блок для видалення дублікатів
 deduplicated as (
     select * from (
         select 
             *,
-            -- Нумеруємо записи для кожної валюти в межах одного дня
             row_number() over (
                 partition by exchange_date, currency_code 
-                order by ingested_at desc -- Пріоритет найсвіжішому запису
+                order by ingested_at desc
             ) as rn
         from bronze_data
     )
-    where rn = 1 -- Залишаємо тільки по одному унікальному запису
+    where rn = 1
 ),
 
 final as (
@@ -37,10 +35,9 @@ final as (
         day,           
         year,          
         month          
-    from deduplicated -- Важливо: тепер беремо дані з deduplicated, а не з bronze_data
+    from deduplicated
 
     {% if is_incremental() %}
-      -- Беремо дані за останні 3 дні, щоб перестрахуватися від затримок API
       where exchange_date >= (select date_add('day', -3, max(exchange_date)) from {{ this }})
     {% endif %}
 )
