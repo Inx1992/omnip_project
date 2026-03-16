@@ -19,17 +19,27 @@ def get_data():
         raise ValueError("❌ Енвайронмент змінна S3_STAGING_DIR не встановлена!")
 
     conn = connect(s3_staging_dir=S3_STAGING_DIR, region_name=AWS_REGION)
-    query = """
+
+    # Додаємо динамічний коментар (Timestamp), щоб обійти кешування результатів Athena в хмарі
+    query = f"""
+    -- cache_buster: {pd.Timestamp.now()}
     SELECT exchange_date, currency_rate 
     FROM "omnip_db_dev_silver"."fct_currency_rates" 
     WHERE currency_code = 'USD' 
     ORDER BY exchange_date ASC
     """
-    return pd.read_sql(query, conn)
+    df = pd.read_sql(query, conn)
+    print(f"📊 DEBUG: Отримано рядків з Athena: {len(df)}")
+    return df
 
 
 # 2. Отримуємо дані
 df = get_data()
+
+if df.empty:
+    print("⚠️ Попередження: Дані порожні. Анімація не буде створена.")
+    exit(0)
+
 df["exchange_date"] = pd.to_datetime(df["exchange_date"])
 
 # 3. Налаштування графіка
@@ -40,6 +50,7 @@ x_min = df["exchange_date"].min() - pd.Timedelta(days=1)
 x_max = df["exchange_date"].max() + pd.Timedelta(days=1)
 
 ax.set_xlim(x_min, x_max)
+# Динамічні межі Y на основі отриманих даних
 ax.set_ylim(df["currency_rate"].min() - 0.5, df["currency_rate"].max() + 0.5)
 ax.set_title("USD Exchange Rate History (March 2026)", fontsize=14)
 ax.grid(True, linestyle="--", alpha=0.7)
@@ -57,6 +68,7 @@ text = ax.text(
 
 def animate(i):
     current_data = df.iloc[: i + 1]
+    # Matplotlib animation працює краще з датами, якщо їх явно передати як об'єкти
     line.set_data(current_data["exchange_date"], current_data["currency_rate"])
 
     latest_rate = current_data["currency_rate"].iloc[-1]
@@ -67,7 +79,7 @@ def animate(i):
 
 
 # 4. Створення анімації
-# interval=300 (0.3 сек на кадр). frames=len(df) - по одному кадру на кожен день
+# interval=400 (0.4 сек на кадр). frames=len(df) - по одному кадру на кожен день
 ani = animation.FuncAnimation(fig, animate, frames=len(df), interval=400, blit=True)
 
 # 5. Збереження
