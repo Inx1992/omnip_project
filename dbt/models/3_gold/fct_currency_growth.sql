@@ -33,11 +33,11 @@ monthly_aggregation as (
         min_by(currency_rate, exchange_date) as month_start_rate,
         max_by(currency_rate, exchange_date) as month_end_rate,
         
-        -- Середній ріст та падіння (замінюємо NULL на 0.0)
+        -- Середній ріст та падіння
         coalesce(avg(case when daily_delta > 0 then daily_delta end), 0.0) as avg_positive_delta,
         coalesce(avg(case when daily_delta < 0 then daily_delta end), 0.0) as avg_negative_delta,
         
-        -- Максимальний стрибок (наскільки сильно штормило валюту за день)
+        -- Максимальний стрибок
         max(abs_daily_delta) as max_volatility_day,
         
         count(case when daily_delta > 0 then 1 end) as days_of_growth,
@@ -57,23 +57,22 @@ select
     -- Загальний ріст/падіння у %
     round(((month_end_rate - month_start_rate) / nullif(month_start_rate, 0)) * 100, 2) as total_monthly_growth_pct,
     
-    -- Візуальний індикатор тренду (дуже зручно для швидкого аналізу)
+    -- Візуальний індикатор тренду (ВИПРАВЛЕНО: прибрано 'x')
     case 
         when month_end_rate > month_start_rate then '📈 UP'
-        when month_end_rate < month_start_rate then '📉 DOWN'x
+        when month_end_rate < month_start_rate then '📉 DOWN'
         else '➖ STABLE'
     end as market_trend,
 
-    -- Середні значення коливань (вже без NULL)
+    -- Середні значення коливань
     round(avg_positive_delta, 4) as avg_daily_gain,
     round(avg_negative_delta, 4) as avg_daily_loss,
     
-    -- Показник стабільності: чим вище значення, тим спокійніша валюта
+    -- Показник стабільності
     round(max_volatility_day, 4) as max_one_day_jump,
     
     days_of_growth,
     days_of_decline,
     total_days_measured
 from monthly_aggregation
--- Сортуємо: найсвіжіші місяці та найбільші зміни (по модулю) нагорі
 order by report_month desc, abs(total_monthly_growth_pct) desc
