@@ -19,9 +19,9 @@ final as (
         currency_code,
         exchange_date,
         ingested_at,
-        year,
-        month,
-        day
+        day,           -- Звичайна колонка (має бути ПЕРЕД партиціями)
+        year,          -- Перша колонка партиціонування
+        month          -- Друга колонка партиціонування
     from bronze_data
 
     {% if is_incremental() %}
