@@ -31,42 +31,60 @@ def get_data():
 df = get_data()
 
 # 2. Налаштування стилю "White" з підписами
-sns.set_theme(style="white")  # Білий фон без сітки
+sns.set_theme(style="white")
 f, ax = plt.subplots(figsize=(8, 8))
 
-# Шар 1: Scatterplot (дрібні точки фоном для текстури)
+# Шар 1: Точки (Щоденні записи)
+# Збільшуємо розмір (s=25) та робимо колір насиченим (black або darkblue)
+# alpha=0.8 дозволяє бачити накладання точок, але залишає їх чіткими
 sns.scatterplot(
-    data=df, x="usd_rate", y="eur_rate", s=10, color=".15", ax=ax, alpha=0.4
+    data=df,
+    x="usd_rate",
+    y="eur_rate",
+    s=25,
+    color="black",
+    marker="o",
+    label="Daily Rate Record",
+    ax=ax,
+    alpha=0.8,
+    zorder=3,  # Виносимо точки на передній план
 )
 
-# Шар 2: Histplot (Теплова карта 'mako')
+# Шар 2: Histplot (Теплова карта фоном)
 sns.histplot(
-    data=df, x="usd_rate", y="eur_rate", bins=30, pthresh=0.1, cmap="mako", ax=ax
+    data=df,
+    x="usd_rate",
+    y="eur_rate",
+    bins=30,
+    pthresh=0.1,
+    cmap="mako",
+    ax=ax,
+    zorder=1,
 )
 
 # Шар 3: KDE Plot (Контурні лінії)
-# На білому фоні використовуємо темний колір (наприклад, темно-синій або чорний)
 sns.kdeplot(
     data=df,
     x="usd_rate",
     y="eur_rate",
     levels=5,
-    color="#07223e",
-    linewidths=1.2,
+    color="#e74c3c",  # Зробимо контури червоними для контрасту з точками
+    linewidths=1.5,
     ax=ax,
+    zorder=2,
 )
 
-# 3. Додавання підписів та оформлення
+# Оформлення
 ax.set_title(
-    "Currency Correlation: USD vs EUR (UAH)", fontsize=16, fontweight="bold", pad=20
+    "Daily Currency Correlation: USD vs EUR", fontsize=16, fontweight="bold", pad=20
 )
 ax.set_xlabel("USD Exchange Rate (UAH)", fontsize=12)
 ax.set_ylabel("EUR Exchange Rate (UAH)", fontsize=12)
+ax.legend(loc="upper left")  # Додаємо легенду для пояснення, що точки — це записи
 
-# Прибираємо верхню та праву межі для "чистого" вигляду
 sns.despine()
 
 # 4. Збереження
 output_filename = "usd_eur_bivariate.png"
 plt.savefig(output_filename, dpi=300, bbox_inches="tight")
-print(f"✅ Графік на білому фоні створено: {output_filename}")
+print(f"✅ Графік з чіткими щоденними точками створено: {output_filename}")
