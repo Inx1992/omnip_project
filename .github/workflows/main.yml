@@ -67,5 +67,5 @@ jobs:
       - name: Upload Analysis Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: currency-animation
-          path: usd_trend.gif # <--- ТУТ БУЛА ПОМИЛКА, ВИПРАВЛЕНО НА .gif
+          name: currency-analysis
+          path: usd_eur_bivariate.png
