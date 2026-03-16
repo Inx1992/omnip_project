@@ -1,40 +1,40 @@
-cat <<EOF > .gitignore
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 .venv/
 build/
 dist/
+.python-version
 
+# Secrets
 .env
 .env.secret
 
-dbt_project/dbt_packages/
-dbt_project/logs/
-dbt_project/target/
-dbt_project/dbt_modules/
-dbt_project/profiles.yml
-dbt_project/catalog.json
-dbt_project/manifest.json
-dbt_project/run_results.json
+# dbt (універсальні шляхи для папки dbt)
+**/dbt_packages/
+**/logs/
+**/target/
+**/dbt_modules/
+**/catalog.json
+**/manifest.json
+**/run_results.json
+
+# УВАГА: Якщо ти хочеш тримати шаблон profiles.yml в гіті, 
+# закоментуй наступний рядок. Якщо тримаєш його ТІЛЬКИ локально - залиш.
+# dbt/profiles.yml
 
 # Terraform
-# Terraform технічні файли
 .terraform/
 *.tfstate
-*.tfstate.*.backup
 *.tfstate.backup
 *.tfstate.lock.info
-
-# Файли змінних (можуть містити секрети)
 *.tfvars
 *.tfvars.json
-
-# Файли перевизначення конфігурації
 override.tf
 override.tf.json
 
+# IDE & OS
 .vscode/
 .idea/
 .DS_Store
-EOF

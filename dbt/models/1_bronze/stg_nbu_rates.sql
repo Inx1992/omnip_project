@@ -5,7 +5,6 @@ select
     txt as currency_name,
     cast(rate as double) as currency_rate,
     cc as currency_code,
-    -- Конвертуємо рядки в правильні типи один раз тут
     try(date_parse(exchangedate, '%d.%m.%Y')) as exchange_date,
     cast(parse_datetime(ingested_at, 'yyyy-MM-dd HH:mm:ss') as timestamp) as ingested_at,
     year, 

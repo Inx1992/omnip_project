@@ -1,0 +1,729 @@
+{
+  "version": 4,
+  "terraform_version": "1.14.5",
+  "serial": 153,
+  "lineage": "1480cc7c-0347-7851-a22f-c926bbb9db2e",
+  "outputs": {
+    "athena_results_bucket": {
+      "value": "omnip-athena-results-dev-2026",
+      "type": "string"
+    },
+    "athena_workgroup_name": {
+      "value": "omnip_dev_workgroup",
+      "type": "string"
+    },
+    "data_lake_bucket": {
+      "value": "omnip-data-lake-dev-2026",
+      "type": "string"
+    },
+    "s3_staging_dir": {
+      "value": "s3://omnip-athena-results-dev-2026/results/",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "http",
+      "name": "my_ip",
+      "provider": "provider[\"registry.terraform.io/hashicorp/http\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "body": "195.114.144.60",
+            "ca_cert_pem": null,
+            "client_cert_pem": null,
+            "client_key_pem": null,
+            "id": "https://api.ipify.org",
+            "insecure": null,
+            "method": null,
+            "request_body": null,
+            "request_headers": null,
+            "request_timeout_ms": null,
+            "response_body": "195.114.144.60",
+            "response_body_base64": "MTk1LjExNC4xNDQuNjA=",
+            "response_headers": {
+              "Cf-Cache-Status": "DYNAMIC",
+              "Cf-Ray": "9d40ffa3a9c03bb5-WAW",
+              "Content-Type": "text/plain",
+              "Date": "Thu, 26 Feb 2026 17:00:25 GMT",
+              "Server": "cloudflare",
+              "Vary": "Origin"
+            },
+            "retry": null,
+            "status_code": 200,
+            "url": "https://api.ipify.org"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_athena_workgroup",
+      "name": "main",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:athena:us-east-1:585890465986:workgroup/omnip_dev_workgroup",
+            "configuration": [
+              {
+                "bytes_scanned_cutoff_per_query": 0,
+                "customer_content_encryption_configuration": [],
+                "enable_minimum_encryption_configuration": false,
+                "enforce_workgroup_configuration": false,
+                "engine_version": [
+                  {
+                    "effective_engine_version": "Athena engine version 3",
+                    "selected_engine_version": "AUTO"
+                  }
+                ],
+                "execution_role": "",
+                "identity_center_configuration": [],
+                "managed_query_results_configuration": [],
+                "monitoring_configuration": [],
+                "publish_cloudwatch_metrics_enabled": true,
+                "requester_pays_enabled": false,
+                "result_configuration": [
+                  {
+                    "acl_configuration": [],
+                    "encryption_configuration": [],
+                    "expected_bucket_owner": "",
+                    "output_location": "s3://omnip-athena-results-dev-2026/results/"
+                  }
+                ]
+              }
+            ],
+            "description": "",
+            "force_destroy": true,
+            "id": "omnip_dev_workgroup",
+            "name": "omnip_dev_workgroup",
+            "region": "us-east-1",
+            "state": "ENABLED",
+            "tags": null,
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_cloudwatch_log_group.athena_logs",
+            "aws_s3_bucket.athena_results"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_budgets_budget",
+      "name": "monthly_limit",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "account_id": "585890465986",
+            "arn": "arn:aws:budgets::585890465986:budget/omnip-monthly-5-usd-limit",
+            "auto_adjust_data": [],
+            "billing_view_arn": "",
+            "budget_type": "COST",
+            "cost_filter": [],
+            "cost_types": [
+              {
+                "include_credit": true,
+                "include_discount": true,
+                "include_other_subscription": true,
+                "include_recurring": true,
+                "include_refund": true,
+                "include_subscription": true,
+                "include_support": true,
+                "include_tax": true,
+                "include_upfront": true,
+                "use_amortized": false,
+                "use_blended": false
+              }
+            ],
+            "filter_expression": [],
+            "id": "585890465986:omnip-monthly-5-usd-limit",
+            "limit_amount": "5.0",
+            "limit_unit": "USD",
+            "name": "omnip-monthly-5-usd-limit",
+            "name_prefix": "",
+            "notification": [
+              {
+                "comparison_operator": "GREATER_THAN",
+                "notification_type": "ACTUAL",
+                "subscriber_email_addresses": [
+                  "inxhouse92@gmail.com"
+                ],
+                "subscriber_sns_topic_arns": [],
+                "threshold": 80,
+                "threshold_type": "PERCENTAGE"
+              }
+            ],
+            "planned_limit": [],
+            "tags": null,
+            "tags_all": {},
+            "time_period_end": "2087-06-15_00:00",
+            "time_period_start": "2026-02-01_00:00",
+            "time_unit": "MONTHLY"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_cloudwatch_log_group",
+      "name": "athena_logs",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:logs:us-east-1:585890465986:log-group:/aws/athena/omnip_dev_workgroup",
+            "deletion_protection_enabled": false,
+            "id": "/aws/athena/omnip_dev_workgroup",
+            "kms_key_id": "",
+            "log_group_class": "STANDARD",
+            "name": "/aws/athena/omnip_dev_workgroup",
+            "name_prefix": "",
+            "region": "us-east-1",
+            "retention_in_days": 1,
+            "skip_destroy": false,
+            "tags": null,
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "585890465986",
+            "name": "/aws/athena/omnip_dev_workgroup",
+            "region": "us-east-1"
+          },
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_default_vpc",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:585890465986:vpc/vpc-0a290f7cff727b40c",
+            "assign_generated_ipv6_cidr_block": false,
+            "cidr_block": "172.31.0.0/16",
+            "default_network_acl_id": "acl-0cf803e9b15cb2052",
+            "default_route_table_id": "rtb-049157061a536f26f",
+            "default_security_group_id": "sg-0ab7f50c4ac64aca4",
+            "dhcp_options_id": "dopt-01aeef42ed339d7d3",
+            "enable_dns_hostnames": true,
+            "enable_dns_support": true,
+            "enable_network_address_usage_metrics": false,
+            "existing_default_vpc": true,
+            "force_destroy": false,
+            "id": "vpc-0a290f7cff727b40c",
+            "instance_tenancy": "default",
+            "ipv6_association_id": "",
+            "ipv6_cidr_block": "",
+            "ipv6_cidr_block_network_border_group": "",
+            "ipv6_ipam_pool_id": "",
+            "ipv6_netmask_length": 0,
+            "main_route_table_id": "rtb-049157061a536f26f",
+            "owner_id": "585890465986",
+            "region": "us-east-1",
+            "tags": null,
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_glue_catalog_database",
+      "name": "dbt_db",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:glue:us-east-1:585890465986:database/omnip_db_dev",
+            "catalog_id": "585890465986",
+            "create_table_default_permission": [
+              {
+                "permissions": [
+                  "ALL"
+                ],
+                "principal": [
+                  {
+                    "data_lake_principal_identifier": "IAM_ALLOWED_PRINCIPALS"
+                  }
+                ]
+              }
+            ],
+            "description": "",
+            "federated_database": [],
+            "id": "585890465986:omnip_db_dev",
+            "location_uri": "",
+            "name": "omnip_db_dev",
+            "parameters": null,
+            "region": "us-east-1",
+            "tags": null,
+            "tags_all": {},
+            "target_database": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_glue_catalog_table",
+      "name": "nbu_rates_raw",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:glue:us-east-1:585890465986:table/omnip_db_dev/nbu_rates_raw",
+            "catalog_id": "585890465986",
+            "database_name": "omnip_db_dev",
+            "description": "",
+            "id": "585890465986:omnip_db_dev:nbu_rates_raw",
+            "name": "nbu_rates_raw",
+            "open_table_format_input": [],
+            "owner": "",
+            "parameters": {
+              "classification": "parquet",
+              "compressionType": "none",
+              "projection.day.digits": "2",
+              "projection.day.range": "1,31",
+              "projection.day.type": "integer",
+              "projection.enabled": "true",
+              "projection.month.digits": "2",
+              "projection.month.range": "1,12",
+              "projection.month.type": "integer",
+              "projection.year.range": "2024,2030",
+              "projection.year.type": "integer",
+              "storage.location.template": "s3://omnip-data-lake-dev-2026/bronze/nbu_rates/year=${year}/month=${month}/day=${day}/",
+              "typeOfData": "file"
+            },
+            "partition_index": null,
+            "partition_keys": [
+              {
+                "comment": "",
+                "name": "year",
+                "parameters": null,
+                "type": "string"
+              },
+              {
+                "comment": "",
+                "name": "month",
+                "parameters": null,
+                "type": "string"
+              },
+              {
+                "comment": "",
+                "name": "day",
+                "parameters": null,
+                "type": "string"
+              }
+            ],
+            "region": "us-east-1",
+            "retention": 0,
+            "storage_descriptor": [
+              {
+                "additional_locations": null,
+                "bucket_columns": null,
+                "columns": [
+                  {
+                    "comment": "",
+                    "name": "r030",
+                    "parameters": null,
+                    "type": "int"
+                  },
+                  {
+                    "comment": "",
+                    "name": "txt",
+                    "parameters": null,
+                    "type": "string"
+                  },
+                  {
+                    "comment": "",
+                    "name": "currency_rate",
+                    "parameters": null,
+                    "type": "double"
+                  },
+                  {
+                    "comment": "",
+                    "name": "cc",
+                    "parameters": null,
+                    "type": "string"
+                  },
+                  {
+                    "comment": "",
+                    "name": "exchangedate",
+                    "parameters": null,
+                    "type": "string"
+                  },
+                  {
+                    "comment": "",
+                    "name": "ingested_at",
+                    "parameters": null,
+                    "type": "string"
+                  },
+                  {
+                    "comment": "",
+                    "name": "extraction_date",
+                    "parameters": null,
+                    "type": "string"
+                  }
+                ],
+                "compressed": false,
+                "input_format": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+                "location": "s3://omnip-data-lake-dev-2026/bronze/nbu_rates/",
+                "number_of_buckets": 0,
+                "output_format": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+                "parameters": null,
+                "schema_reference": [],
+                "ser_de_info": [
+                  {
+                    "name": "parquet-serde",
+                    "parameters": null,
+                    "serialization_library": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+                  }
+                ],
+                "skewed_info": [],
+                "sort_columns": [],
+                "stored_as_sub_directories": false
+              }
+            ],
+            "table_type": "EXTERNAL_TABLE",
+            "target_table": [],
+            "view_expanded_text": "",
+            "view_original_text": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_glue_catalog_database.dbt_db"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "athena_results",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::omnip-athena-results-dev-2026",
+            "bucket": "omnip-athena-results-dev-2026",
+            "bucket_domain_name": "omnip-athena-results-dev-2026.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_region": "us-east-1",
+            "bucket_regional_domain_name": "omnip-athena-results-dev-2026.s3.us-east-1.amazonaws.com",
+            "cors_rule": [],
+            "force_destroy": true,
+            "grant": [
+              {
+                "id": "e68c6f6220db08e8bb5462d49f3dd9121fe8624e3da361c91cb954e5bbfb6c0d",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "omnip-athena-results-dev-2026",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "",
+                        "sse_algorithm": "AES256"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": null,
+            "tags_all": {},
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "585890465986",
+            "bucket": "omnip-athena-results-dev-2026",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "raw_data",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acceleration_status": "",
+            "acl": null,
+            "arn": "arn:aws:s3:::omnip-data-lake-dev-2026",
+            "bucket": "omnip-data-lake-dev-2026",
+            "bucket_domain_name": "omnip-data-lake-dev-2026.s3.amazonaws.com",
+            "bucket_prefix": "",
+            "bucket_region": "us-east-1",
+            "bucket_regional_domain_name": "omnip-data-lake-dev-2026.s3.us-east-1.amazonaws.com",
+            "cors_rule": [],
+            "force_destroy": true,
+            "grant": [
+              {
+                "id": "e68c6f6220db08e8bb5462d49f3dd9121fe8624e3da361c91cb954e5bbfb6c0d",
+                "permissions": [
+                  "FULL_CONTROL"
+                ],
+                "type": "CanonicalUser",
+                "uri": ""
+              }
+            ],
+            "hosted_zone_id": "Z3AQBSTGFYJSTF",
+            "id": "omnip-data-lake-dev-2026",
+            "lifecycle_rule": [],
+            "logging": [],
+            "object_lock_configuration": [],
+            "object_lock_enabled": false,
+            "policy": "",
+            "region": "us-east-1",
+            "replication_configuration": [],
+            "request_payer": "BucketOwner",
+            "server_side_encryption_configuration": [
+              {
+                "rule": [
+                  {
+                    "apply_server_side_encryption_by_default": [
+                      {
+                        "kms_master_key_id": "",
+                        "sse_algorithm": "AES256"
+                      }
+                    ],
+                    "bucket_key_enabled": false
+                  }
+                ]
+              }
+            ],
+            "tags": null,
+            "tags_all": {},
+            "timeouts": null,
+            "versioning": [
+              {
+                "enabled": false,
+                "mfa_delete": false
+              }
+            ],
+            "website": [],
+            "website_domain": null,
+            "website_endpoint": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "585890465986",
+            "bucket": "omnip-data-lake-dev-2026",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH19"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_intelligent_tiering_configuration",
+      "name": "raw_data_tiering",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket": "omnip-data-lake-dev-2026",
+            "filter": [],
+            "id": "omnip-data-lake-dev-2026:EntireBucket",
+            "name": "EntireBucket",
+            "region": "us-east-1",
+            "status": "Enabled",
+            "tiering": [
+              {
+                "access_tier": "ARCHIVE_ACCESS",
+                "days": 90
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_s3_bucket.raw_data"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "name": "athena_results_lifecycle",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "bucket": "omnip-athena-results-dev-2026",
+            "expected_bucket_owner": "",
+            "id": "omnip-athena-results-dev-2026",
+            "region": "us-east-1",
+            "rule": [
+              {
+                "abort_incomplete_multipart_upload": [],
+                "expiration": [
+                  {
+                    "date": null,
+                    "days": 3,
+                    "expired_object_delete_marker": false
+                  }
+                ],
+                "filter": [],
+                "id": "auto-delete-athena-results",
+                "noncurrent_version_expiration": [],
+                "noncurrent_version_transition": [],
+                "prefix": "",
+                "status": "Enabled",
+                "transition": []
+              }
+            ],
+            "timeouts": null,
+            "transition_default_minimum_object_size": "all_storage_classes_128K"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "dependencies": [
+            "aws_s3_bucket.athena_results"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "redshift_sg",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:us-east-1:585890465986:security-group/sg-0f7a1ae6b22790034",
+            "description": "Managed by Terraform",
+            "egress": [
+              {
+                "cidr_blocks": [
+                  "0.0.0.0/0"
+                ],
+                "description": "",
+                "from_port": 0,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "-1",
+                "security_groups": [],
+                "self": false,
+                "to_port": 0
+              }
+            ],
+            "id": "sg-0f7a1ae6b22790034",
+            "ingress": [
+              {
+                "cidr_blocks": [
+                  "195.114.144.60/32"
+                ],
+                "description": "",
+                "from_port": 5439,
+                "ipv6_cidr_blocks": [],
+                "prefix_list_ids": [],
+                "protocol": "tcp",
+                "security_groups": [],
+                "self": false,
+                "to_port": 5439
+              }
+            ],
+            "name": "omnip-redshift-access",
+            "name_prefix": "",
+            "owner_id": "585890465986",
+            "region": "us-east-1",
+            "revoke_rules_on_delete": false,
+            "tags": null,
+            "tags_all": {},
+            "timeouts": null,
+            "vpc_id": "vpc-0a290f7cff727b40c"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "585890465986",
+            "id": "sg-0f7a1ae6b22790034",
+            "region": "us-east-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6OTAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "aws_default_vpc.default",
+            "data.http.my_ip"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

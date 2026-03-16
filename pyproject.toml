@@ -1,17 +1,20 @@
 [project]
 name = "omnip"
 version = "0.1.0"
-description = "Add your description here"
+description = "ETL pipeline for NBU rates using AWS Athena and dbt"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "awswrangler>=3.15.0",
-    "boto3>=1.42.54",
-    "dbt-athena-community>=1.10.0",
-    "dbt-core>=1.11.6",
-    "dbt-redshift>=1.10.1",
+    "boto3>=1.34.0",
+    "dbt-athena-community>=1.8.0", # Стабільна версія для Athena
+    "dbt-core>=1.8.0",
     "pandas<3.0.0",
-    "pyarrow<23.0.0",
-    "python-dotenv>=1.2.1",
-    "requests>=2.32.5",
+    "pyarrow>=14.0.0", # Важливо для роботи з Parquet
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

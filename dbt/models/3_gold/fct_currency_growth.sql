@@ -60,7 +60,7 @@ select
     -- Візуальний індикатор тренду (дуже зручно для швидкого аналізу)
     case 
         when month_end_rate > month_start_rate then '📈 UP'
-        when month_end_rate < month_start_rate then '📉 DOWN'
+        when month_end_rate < month_start_rate then '📉 DOWN'x
         else '➖ STABLE'
     end as market_trend,
 

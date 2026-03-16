@@ -6,7 +6,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    # 17:00 за Києвом (зимовий час UTC+2)
+    # 17:00 за Києвом (UTC+2)
     - cron: "0 15 * * *"
 
 jobs:
@@ -15,17 +15,25 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Оновлено до v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
+      # Кешування шарів Docker значно прискорить повторні запуски
       - name: Build Docker image
-        run: docker build -t nbu-app .
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: nbu-app:latest
+          outputs: type=docker,dest=/tmp/nbu-app.tar
+
+      - name: Load Docker image
+        run: docker load --input /tmp/nbu-app.tar
 
       - name: Run Scraper and dbt
         env:
-          # Секрети GitHub
+          # Витягуємо секрети GitHub у змінні оточення раннера
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -33,13 +41,11 @@ jobs:
           ATHENA_DATABASE: ${{ secrets.ATHENA_DATABASE }}
           ATHENA_SCHEMA: ${{ secrets.ATHENA_SCHEMA }}
         run: |
-          # Запускаємо ОДИН контейнер. 
-          # Ми передаємо всі змінні середовища, щоб і Python, і dbt (всередині скрипта) їх бачили.
           docker run --rm \
-            -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-            -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-            -e AWS_REGION=$AWS_REGION \
-            -e AWS_S3_STAGING_DIR=$AWS_S3_STAGING_DIR \
-            -e ATHENA_DATABASE=$ATHENA_DATABASE \
-            -e ATHENA_SCHEMA=$ATHENA_SCHEMA \
+            -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -e AWS_REGION="${{ secrets.AWS_REGION }}" \
+            -e AWS_S3_STAGING_DIR="${{ secrets.AWS_S3_STAGING_DIR }}" \
+            -e ATHENA_DATABASE="${{ secrets.ATHENA_DATABASE }}" \
+            -e ATHENA_SCHEMA="${{ secrets.ATHENA_SCHEMA }}" \
             nbu-app python src/ingest_nbu_rates.py

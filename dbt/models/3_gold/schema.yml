@@ -16,7 +16,7 @@ models:
               # Всі аргументи мають бути всередині блоку arguments
               arguments:
                 min_value: 0
-                inclusive: false
+                inclusive: falsegit add models/3_gold/schema.yml
 
   - name: fct_currency_growth
     description: "Місячна динаміка росту та падіння валют (Gold layer)."

@@ -2,7 +2,7 @@
   config(
     materialized='incremental',
     incremental_strategy='insert_overwrite',
-    partitioned_by=['year', 'month', 'day'],
+    partitioned_by=['year', 'month'],
     format='parquet'
   )
 }}
@@ -25,11 +25,8 @@ final as (
     from bronze_data
 
     {% if is_incremental() %}
-      /* Логіка: ми беремо дані, які з'явилися ПІСЛЯ останнього запису в Silver.
-         Якщо ти хочеш, щоб повторний запуск у той самий день ТАКОЖ оновлював дані,
-         використовуй >= (більше або дорівнює).
-      */
-      where ingested_at >= (select max(ingested_at) from {{ this }})
+      -- Беремо дані за останні 3 дні, щоб перестрахуватися від затримок API
+      where exchange_date >= (select date_add('day', -3, max(exchange_date)) from {{ this }})
     {% endif %}
 )
 

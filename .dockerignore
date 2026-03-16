@@ -1,0 +1,11 @@
+.venv/
+.vscode/
+.git/
+.env
+__pycache__/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+terraform/
+data/
+logs/
