@@ -5,14 +5,15 @@ import boto3
 import subprocess
 import sys
 import time
+import os
 from datetime import datetime
 
 # --- CONFIGURATION ---
-BUCKET_NAME = "omnip-data-lake-dev-2026"
+BUCKET_NAME = os.getenv("BUCKET_NAME", "omnip-data-lake-dev-2026")
 DATABASE = "omnip_db_dev"
 TABLE = "nbu_rates_raw"
 S3_BASE_PATH = f"s3://{BUCKET_NAME}/bronze/nbu_rates/"
-REGION = "us-east-1"
+REGION = os.getenv("AWS_REGION", "us-east-1")
 
 
 def fetch_nbu_data():
@@ -26,7 +27,6 @@ def fetch_nbu_data():
 
 def run_dbt():
     print("\n🚀 Starting dbt transformations (build)...", flush=True)
-    # Переконайся, що шлях до dbt проекту правильний
     result = subprocess.run(
         ["dbt", "build", "--project-dir", "./dbt"], capture_output=False, text=True
     )
@@ -37,60 +37,69 @@ def run_dbt():
     return True
 
 
+def check_if_exists(session, path):
+    """Перевіряє, чи існують уже файли у вказаній директорії S3"""
+    files = wr.s3.list_objects(path=path, boto3_session=session)
+    return len(files) > 0
+
+
 def main():
     steps_ok = {
-        "API Fetch": False,
-        "Schema Prep": False,
-        "S3 Upload": False,
+        "Check Duplicates": False,
+        "API Fetch": "Skipped",
+        "S3 Upload": "Skipped",
         "dbt Build": False,
     }
 
     try:
         session = boto3.Session(region_name=REGION)
 
-        # 1. Екстракція
-        json_data = fetch_nbu_data()
-        df = pd.DataFrame(json_data)
-        steps_ok["API Fetch"] = True
-
-        # 2. Фіксація часу для всього процесу (Single Source of Truth)
+        # 1. Визначаємо часові мітки та шлях
         now = datetime.now()
-        ingested_at = now.strftime("%Y-%m-%d %H:%M:%S")
         year, month, day = now.strftime("%Y"), now.strftime("%m"), now.strftime("%d")
-        file_ts = now.strftime("%H%M%S")  # Мітка часу для назви файлу
+        daily_folder_path = f"{S3_BASE_PATH}year={year}/month={month}/day={day}/"
 
-        # 3. Приведення типів та метадані (Schema Enforcement)
-        # Це гарантує, що Athena не "виб'є" помилку через зміну типів у Parquet
-        df = df.astype(
-            {
-                "r030": "int64",
-                "txt": "string",
-                "rate": "float64",
-                "cc": "string",
-                "exchangedate": "string",
-            }
-        )
-        df["ingested_at"] = ingested_at
-        steps_ok["Schema Prep"] = True
+        # 2. Перевірка на дублікати в Bronze
+        if check_if_exists(session, daily_folder_path):
+            print(
+                f"⚠️ Дані за {year}-{month}-{day} вже існують у Bronze. Завантаження пропущено."
+            )
+            steps_ok["Check Duplicates"] = True
+        else:
+            # 3. Екстракція (виконується тільки якщо даних ще немає)
+            json_data = fetch_nbu_data()
+            df = pd.DataFrame(json_data)
+            steps_ok["API Fetch"] = "Success"
 
-        # Визначаємо шлях (унікальний файл для кожного запуску, щоб не перетирати дані)
-        daily_file_path = f"{S3_BASE_PATH}year={year}/month={month}/day={day}/nbu_ingest_{file_ts}.parquet"
+            # 4. Schema Enforcement
+            ingested_at = now.strftime("%Y-%m-%d %H:%M:%S")
+            df = df.astype(
+                {
+                    "r030": "int64",
+                    "txt": "string",
+                    "rate": "float64",
+                    "cc": "string",
+                    "exchangedate": "string",
+                }
+            )
+            df["ingested_at"] = ingested_at
 
-        # 4. Завантаження (БЕЗ оновлення Glue Catalog - працює Partition Projection)
-        wr.s3.to_parquet(
-            df=df.drop(columns=["year", "month", "day"], errors="ignore"),
-            path=daily_file_path,
-            dataset=False,
-            boto3_session=session,
-        )
+            # 5. Завантаження
+            file_ts = now.strftime("%H%M%S")
+            file_path = f"{daily_folder_path}nbu_ingest_{file_ts}.parquet"
 
-        print(f"✅ Data uploaded to: {daily_file_path}", flush=True)
-        steps_ok["S3 Upload"] = True
+            wr.s3.to_parquet(
+                df=df,
+                path=file_path,
+                dataset=False,
+                boto3_session=session,
+            )
+            print(f"✅ Data uploaded to: {file_path}")
+            steps_ok["S3 Upload"] = "Success"
+            steps_ok["Check Duplicates"] = True
 
-        # Невелика пауза перед dbt для консистентності S3 (S3 consistency is strong, but safety first)
+        # 6. Запуск dbt (завжди запускаємо для консистентності Silver шару)
         time.sleep(2)
-
-        # 5. Запуск dbt
         if run_dbt():
             steps_ok["dbt Build"] = True
 
@@ -98,11 +107,13 @@ def main():
         print("\n" + "=" * 35)
         print("🏁 PIPELINE EXECUTION SUMMARY")
         print("=" * 35)
-        for step, success in steps_ok.items():
-            print(f"{'✅' if success else '❌'} {step}", flush=True)
+        for step, status in steps_ok.items():
+            print(
+                f"{'✅' if status in [True, 'Success', 'Skipped'] else '❌'} {step}: {status}"
+            )
 
-        if all(steps_ok.values()):
-            print("\n🚀 ALL SYSTEMS GO!", flush=True)
+        if steps_ok["Check Duplicates"] and steps_ok["dbt Build"]:
+            print("\n🚀 PIPELINE FINISHED SUCCESSFULLY!", flush=True)
         else:
             sys.exit(1)
 
