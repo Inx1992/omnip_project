@@ -108,5 +108,6 @@ def animate(i):
 ani = animation.FuncAnimation(fig, animate, frames=20, interval=100, repeat=False)
 
 # 5. Збереження
-ani.save("usd_trend.gif", writer="pillow")
-print(f"✅ Аналітичний GIF створено успішно.")
+output_filename = "usd_trend.gif"
+ani.save(output_filename, writer="pillow")
+print(f"✅ Аналітичний GIF створено успішно: {output_filename}")
