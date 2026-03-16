@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib
 import seaborn as sns
 
-# ВАЖЛИВО: Agg для хмарного середовища
+# ВАЖЛИВО: Налаштування бекенду для роботи без GUI
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pyathena import connect
@@ -14,14 +14,8 @@ S3_STAGING_DIR = os.getenv("S3_STAGING_DIR")
 
 
 def get_data():
-    if not S3_STAGING_DIR:
-        raise ValueError("❌ S3_STAGING_DIR не встановлена!")
-
     conn = connect(s3_staging_dir=S3_STAGING_DIR, region_name=AWS_REGION)
-
-    # Запит для порівняння двох валют (USD та EUR) по днях
-    query = f"""
-    -- cache_buster: {pd.Timestamp.now()}
+    query = """
     SELECT 
         u.exchange_date, 
         u.currency_rate as usd_rate, 
@@ -31,47 +25,48 @@ def get_data():
       ON u.exchange_date = e.exchange_date
     WHERE u.currency_code = 'USD' AND e.currency_code = 'EUR'
     """
-    df = pd.read_sql(query, conn)
-    return df
+    return pd.read_sql(query, conn)
 
 
-# 2. Отримуємо дані
 df = get_data()
 
-if df.empty:
-    print("⚠️ Попередження: Дані порожні.")
-    exit(0)
+# 2. Налаштування стилю "White" з підписами
+sns.set_theme(style="white")  # Білий фон без сітки
+f, ax = plt.subplots(figsize=(8, 8))
 
-# 3. Налаштування стилю (як на скріншоті)
-sns.set_theme(style="dark")
-fig, ax = plt.subplots(figsize=(8, 8))
+# Шар 1: Scatterplot (дрібні точки фоном для текстури)
+sns.scatterplot(
+    data=df, x="usd_rate", y="eur_rate", s=10, color=".15", ax=ax, alpha=0.4
+)
 
-# Малюємо 3 шари:
-# 1. Scatterplot (точки)
-sns.scatterplot(data=df, x="usd_rate", y="eur_rate", s=15, color=".15", ax=ax)
-
-# 2. Histplot (2D теплова карта щільності)
+# Шар 2: Histplot (Теплова карта 'mako')
 sns.histplot(
     data=df, x="usd_rate", y="eur_rate", bins=30, pthresh=0.1, cmap="mako", ax=ax
 )
 
-# 3. KDE Plot (білі контурні лінії)
+# Шар 3: KDE Plot (Контурні лінії)
+# На білому фоні використовуємо темний колір (наприклад, темно-синій або чорний)
 sns.kdeplot(
-    data=df, x="usd_rate", y="eur_rate", levels=5, color="w", linewidths=1, ax=ax
+    data=df,
+    x="usd_rate",
+    y="eur_rate",
+    levels=5,
+    color="#07223e",
+    linewidths=1.2,
+    ax=ax,
 )
 
-# Оформлення
+# 3. Додавання підписів та оформлення
 ax.set_title(
-    "USD vs EUR: Bivariate Distribution Analysis",
-    fontsize=14,
-    fontweight="bold",
-    color="white",
-    pad=20,
+    "Currency Correlation: USD vs EUR (UAH)", fontsize=16, fontweight="bold", pad=20
 )
-fig.patch.set_facecolor("#212529")  # Темний фон навколо графіка
-ax.set_facecolor("#212529")
+ax.set_xlabel("USD Exchange Rate (UAH)", fontsize=12)
+ax.set_ylabel("EUR Exchange Rate (UAH)", fontsize=12)
 
-# 4. Збереження (ВАЖЛИВО: .png, бо це не анімація)
+# Прибираємо верхню та праву межі для "чистого" вигляду
+sns.despine()
+
+# 4. Збереження
 output_filename = "usd_eur_bivariate.png"
 plt.savefig(output_filename, dpi=300, bbox_inches="tight")
-print(f"✅ Bivariate графік створено успішно: {output_filename}")
+print(f"✅ Графік на білому фоні створено: {output_filename}")
