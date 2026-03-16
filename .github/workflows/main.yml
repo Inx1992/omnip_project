@@ -61,11 +61,11 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          S3_STAGING_DIR: ${{ secrets.AWS_S3_STAGING_DIR }} # Використовуємо ту саму назву, що в visualize_rates.py
+          S3_STAGING_DIR: ${{ secrets.AWS_S3_STAGING_DIR }}
         run: python src/visualize_rates.py
 
       - name: Upload Analysis Artifact
         uses: actions/upload-artifact@v4
         with:
           name: currency-animation
-          path: usd_eur_bivariate.png
+          path: usd_trend.gif # <--- ТУТ БУЛА ПОМИЛКА, ВИПРАВЛЕНО НА .gif
