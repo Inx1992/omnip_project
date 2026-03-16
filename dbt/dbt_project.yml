@@ -15,7 +15,10 @@ clean-targets:
 
 models:
   omnip:
+    # Прибираємо +materialized: view звідси,
+    # щоб працював 'incremental' з SQL-файлу
     2_silver:
-      +materialized: view
+      +schema: silver # бажано додати назву схеми для порядку
     3_gold:
       +materialized: table
+      +schema: gold
