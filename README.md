@@ -59,7 +59,7 @@ The latest pipeline execution achieved a high-quality linkage with the following
    - **GitHub Actions**: Download generated artifacts (e.g., `usd_eur_bivariate.png`) from the workflow summary.
    - **AWS Athena**: Query the `omnip_db_dev_silver` or `gold` databases.
 
-## ⚙️ Tech Stack Configuration (Tuning)
+## ⚙️ Tech Stack Configuration 
 
 **The performance and analytical depth are controlled by the interaction of the following components**:
 
