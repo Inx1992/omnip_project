@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .venv/
+venv/
 build/
 dist/
 .python-version
@@ -10,8 +11,10 @@ dist/
 # Secrets
 .env
 .env.secret
+*.pem
+*.key
 
-# dbt (універсальні шляхи для папки dbt)
+# dbt
 **/dbt_packages/
 **/logs/
 **/target/
@@ -19,22 +22,33 @@ dist/
 **/catalog.json
 **/manifest.json
 **/run_results.json
-
-# УВАГА: Якщо ти хочеш тримати шаблон profiles.yml в гіті, 
-# закоментуй наступний рядок. Якщо тримаєш його ТІЛЬКИ локально - залиш.
-# dbt/profiles.yml
+# Рекомендую тримати profiles.yml в ігнорі, щоб не зачекапити доступи до БД
+profiles.yml
 
 # Terraform
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 *.tfstate.lock.info
 *.tfvars
 *.tfvars.json
+.terraform.tfstate.lock.info
+crash.log
+*.tfplan
 override.tf
 override.tf.json
+
+# Docker & Airflow
+.docker/
+**/airflow.db
+**/airflow.cfg
+**/airflow-webserver.pid
 
 # IDE & OS
 .vscode/
 .idea/
 .DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints
